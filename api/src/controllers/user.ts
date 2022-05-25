@@ -1,49 +1,43 @@
 import { Request, Response, NextFunction } from 'express'
 
-import Book from '../models/Book'
-import BookService from '../services/book'
+import User from '../models/User'
+import UserService from '../services/user'
 import { BadRequestError } from '../helpers/apiError'
 
-// @desc    crete a new book
-// @route   POST /api/v1/books
-// @access  private
+// @desc    crete a new user
+// @route   POST /api/v1/users
+// @access  public
 
-export const createBook = async (
+export const createUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const {
-      ISBN,
-      title,
-      description,
-      category,
-      publisher,
-      publishedDate,
-      authors,
-      status,
-      borrowerId,
-      borrowDate,
-      returnDate,
+      SSN,
+      firstName,
+      lastName,
+      address,
+      email,
+      password,
+      role,
+      createdDate,
     } = req.body
 
-    const book = new Book({
-      ISBN,
-      title,
-      description,
-      category,
-      publisher,
-      publishedDate,
-      authors,
-      status,
-      borrowerId,
-      borrowDate,
-      returnDate,
+    const user = new User({
+      SSN,
+      firstName,
+      lastName,
+      address,
+      email,
+      password,
+      role,
+      createdDate,
     })
 
-    await BookService.create(book)
-    res.json(book)
+    await UserService.create(user)
+    res.json(user)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -53,60 +47,60 @@ export const createBook = async (
   }
 }
 
-// @desc    get all books
-// @route   GET /api/v1/books
-// @access  public
-
-export const getAllBooks = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    res.json(await BookService.find())
-  } catch (error) {
-    if (error instanceof Error && error.name == 'ValidationError') {
-      next(new BadRequestError('Invalid Request', error))
-    } else {
-      next(error)
-    }
-  }
-}
-
-// @desc    get single book
-// @route   GET /api/v1/books/:bookId
-// @access  public
-
-export const getSingleBook = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    res.json(await BookService.findById(req.params.bookId))
-  } catch (error) {
-    if (error instanceof Error && error.name == 'ValidationError') {
-      next(new BadRequestError('Invalid Request', error))
-    } else {
-      next(error)
-    }
-  }
-}
-
-// @desc    update book
-// @route   PUT /api/v1/books/:bookId
+// @desc    get all users
+// @route   GET /api/v1/users
 // @access  private
 
-export const updateBook = async (
+export const getAllUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    res.json(await UserService.find())
+  } catch (error) {
+    if (error instanceof Error && error.name == 'ValidationError') {
+      next(new BadRequestError('Invalid Request', error))
+    } else {
+      next(error)
+    }
+  }
+}
+
+// @desc    get single user
+// @route   GET /api/v1/users/:userId
+// @access  private
+
+export const getSingleUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    res.json(await UserService.findById(req.params.userId))
+  } catch (error) {
+    if (error instanceof Error && error.name == 'ValidationError') {
+      next(new BadRequestError('Invalid Request', error))
+    } else {
+      next(error)
+    }
+  }
+}
+
+// @desc    update user
+// @route   PUT /api/v1/users/:userId
+// @access  private
+
+export const updateUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const update = req.body
-    const bookId = req.params.bookId
-    const updatedBook = await BookService.findByIdAndUpdate(bookId, update)
-    res.json(updatedBook)
+    const userId = req.params.userId
+    const updatedUser = await UserService.findByIdAndUpdate(userId, update)
+    res.json(updatedUser)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -116,17 +110,17 @@ export const updateBook = async (
   }
 }
 
-// @desc    delete book
-// @route   Delete /api/v1/books/:bookId
+// @desc    delete user
+// @route   Delete /api/v1/users/:userId
 // @access  private
 
-export const deleteBook = async (
+export const deleteUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    await BookService.findByIdAndDelete(req.params.bookId)
+    await UserService.findByIdAndDelete(req.params.userId)
     res.status(204).end()
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {

@@ -8,7 +8,7 @@ export type UserDocument = Document & {
   email: string
   password: string
   role: string
-  createdAt: Date
+  createdDate: Date
 }
 
 export enum Role {
@@ -56,7 +56,7 @@ const userSchema = new mongoose.Schema({
     default: Role.User,
   },
 
-  createdAt: {
+  createdDate: {
     type: Date,
     default: Date.now(),
   },
