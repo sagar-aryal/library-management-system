@@ -9,7 +9,7 @@ import {
 
 const router = express.Router()
 
-// Every path we define here will get /api/v1/books prefix
+// Every path we define here will get /api/v1/users prefix
 router.route('/').get(getAllUsers).post(createUser)
 router.route('/:bookId').get(getSingleUser).put(updateUser).delete(deleteUser)
 
