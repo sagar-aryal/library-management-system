@@ -1,11 +1,11 @@
 import mongoose, { Document, Schema } from 'mongoose'
 
 export enum Caterogy {
-  Fiction = 'fiction',
-  Nonfiction = 'nonfiction',
-  Drama = 'drama',
-  Poetry = 'poetry',
-  Folktale = 'folktale',
+  FICTION = 'FICTION',
+  NONFICTION = 'NONFICTION',
+  DRAMA = 'DRAMA',
+  POETRY = 'POETRY',
+  FOLKTALE = 'FOLKTALE',
 }
 
 export enum Status {
