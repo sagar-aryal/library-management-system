@@ -14,21 +14,21 @@ export enum Status {
 }
 
 export type BookDocument = Document & {
-  ISBN: string
+  isbn: string
   title: string
   description: string
   category: string
   publisher: string
   publishedDate: Date
   status: string
-  authors: string[]
+  author: string[]
   borrowerId: string
   borrowDate?: Date
   returnDate?: Date
 }
 
 const bookSchema = new mongoose.Schema({
-  ISBN: {
+  isbn: {
     type: String,
     index: true,
     unique: true,
@@ -69,7 +69,7 @@ const bookSchema = new mongoose.Schema({
     default: Status.AVAILABLE,
   },
 
-  authors: [
+  author: [
     {
       type: Schema.Types.ObjectId,
       ref: 'Author',

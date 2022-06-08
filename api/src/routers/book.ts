@@ -7,6 +7,7 @@ import {
   deleteBook,
   borrowBook,
   returnBook,
+  filterBook,
 } from '../controllers/book'
 
 const router = express.Router()
@@ -16,6 +17,7 @@ const router = express.Router()
 router.route('/:bookId').get(getSingleBook).put(updateBook).delete(deleteBook) */
 
 router.get('/', getAllBooks)
+router.get('/filter', filterBook)
 router.get('/:bookId', getSingleBook)
 
 router.post('/', createBook)

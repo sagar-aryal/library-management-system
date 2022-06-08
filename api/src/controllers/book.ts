@@ -15,13 +15,13 @@ export const createBook = async (
 ) => {
   try {
     const {
-      ISBN,
+      isbn,
       title,
       description,
       category,
       publisher,
       publishedDate,
-      authors,
+      author,
       status,
       borrowerId,
       borrowDate,
@@ -29,13 +29,13 @@ export const createBook = async (
     } = req.body
 
     const book = new Book({
-      ISBN,
+      isbn,
       title,
       description,
       category,
       publisher,
       publishedDate,
-      authors,
+      author,
       status,
       borrowerId,
       borrowDate,
@@ -176,6 +176,43 @@ export const returnBook = async (
     const userId = req.body.userId
     const updatedBook = await BookService.returnBook(bookId, userId)
     res.json(updatedBook)
+  } catch (error) {
+    if (error instanceof Error && error.name == 'ValidationError') {
+      next(new BadRequestError('Invalid Request', error))
+    } else {
+      next(error)
+    }
+  }
+}
+
+// @desc    get filtered book
+// @route   GET /api/v1/books/filter?isbn=..&title=...&etc
+// @access  public
+
+export const filterBook = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { isbn, title, category, author, status, page, limit } =
+      req.query as {
+        [key: string]: string
+      }
+    let authors: string[] = []
+    if (author) {
+      authors = author.split(',')
+    }
+    await BookService.filterBook(
+      isbn,
+      title,
+      category,
+      authors,
+      status,
+      page,
+      limit
+    )
+    res.status(204).end()
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
