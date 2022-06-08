@@ -1,28 +1,15 @@
-import mongoose, { Document } from 'mongoose'
+import mongoose, { Document, Schema } from 'mongoose'
 
 export type UserDocument = Document & {
-  SSN: string
   firstName: string
   lastName: string
-  address: string
   email: string
   password: string
-  role: string
-  createdDate: Date
-}
-
-export enum Role {
-  USER = 'USER',
-  ADMIN = 'ADMIN',
+  isAdmin: boolean
+  borrowedBooks: string[]
 }
 
 const userSchema = new mongoose.Schema({
-  SSN: {
-    type: String,
-    unique: true,
-    required: [true, 'please add SSN'],
-  },
-
   firstName: {
     type: String,
     required: [true, 'please add first name'],
@@ -50,15 +37,14 @@ const userSchema = new mongoose.Schema({
     minlength: [8, 'password is 8 characters long.'],
   },
 
-  role: {
-    type: String,
-    enum: Role,
-    default: Role.User,
+  isAdmin: {
+    type: Boolean,
+    default: false,
   },
 
-  createdDate: {
-    type: Date,
-    default: Date.now(),
+  borrowedBooks: {
+    type: [Schema.Types.ObjectId],
+    ref: 'Book',
   },
 })
 

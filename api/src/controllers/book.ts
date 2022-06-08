@@ -42,8 +42,9 @@ export const createBook = async (
       returnDate,
     })
 
-    await BookService.create(book)
-    res.json(book)
+    const createBook = await BookService.create(book)
+
+    res.json({ book: createBook })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -53,7 +54,7 @@ export const createBook = async (
   }
 }
 
-// @desc    get all books
+// @desc    get all books with pagination
 // @route   GET /api/v1/books
 // @access  public
 
@@ -63,7 +64,8 @@ export const getAllBooks = async (
   next: NextFunction
 ) => {
   try {
-    res.json(await BookService.find())
+    const { page, limit } = req.query as { [key: string]: string }
+    res.json(await BookService.find(page, limit))
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -128,6 +130,52 @@ export const deleteBook = async (
   try {
     await BookService.findByIdAndDelete(req.params.bookId)
     res.status(204).end()
+  } catch (error) {
+    if (error instanceof Error && error.name == 'ValidationError') {
+      next(new BadRequestError('Invalid Request', error))
+    } else {
+      next(error)
+    }
+  }
+}
+
+// @desc    add borrowedBook
+// @route   POST /api/v1/books/:bookId/borrow
+// @access  private
+
+export const borrowBook = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const bookId = req.params.bookId
+    const userId = req.body.userId
+    const updatedBook = await BookService.borrowBook(bookId, userId)
+    res.json(updatedBook)
+  } catch (error) {
+    if (error instanceof Error && error.name == 'ValidationError') {
+      next(new BadRequestError('Invalid Request', error))
+    } else {
+      next(error)
+    }
+  }
+}
+
+// @desc    add returnBook
+// @route   POST /api/v1/books/:bookId/return
+// @access  private
+
+export const returnBook = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const bookId = req.params.bookId
+    const userId = req.body.userId
+    const updatedBook = await BookService.returnBook(bookId, userId)
+    res.json(updatedBook)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))

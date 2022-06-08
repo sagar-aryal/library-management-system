@@ -48,12 +48,15 @@ const Sidebar = () => {
         </ListItemButton>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <FormGroup sx={{ pl: 5 }}>
-              <FormControlLabel control={<Checkbox />} label="Fiction" />
-              <FormControlLabel control={<Checkbox />} label="Nonfiction" />
-              <FormControlLabel control={<Checkbox />} label="Drama" />
-              <FormControlLabel control={<Checkbox />} label="Poetry" />
-              <FormControlLabel control={<Checkbox />} label="Foktale" />
+            <FormGroup sx={{ pl: 4 }}>
+              <FormControlLabel control={<Checkbox />} label="Fiction (20)" />
+              <FormControlLabel
+                control={<Checkbox />}
+                label="Nonfiction (20)"
+              />
+              <FormControlLabel control={<Checkbox />} label="Drama (20)" />
+              <FormControlLabel control={<Checkbox />} label="Poetry (20)" />
+              <FormControlLabel control={<Checkbox />} label="Foktale (20)" />
             </FormGroup>
           </List>
         </Collapse>

@@ -9,8 +9,8 @@ export enum Caterogy {
 }
 
 export enum Status {
-  Available = 'available',
-  Borrowed = 'borrowed',
+  AVAILABLE = 'AVAILABLE',
+  BORROWED = 'BORROWED',
 }
 
 export type BookDocument = Document & {
@@ -20,11 +20,11 @@ export type BookDocument = Document & {
   category: string
   publisher: string
   publishedDate: Date
-  authors: string[]
   status: string
-  borrowerId: string[]
-  borrowDate: Date
-  returnDate: Date
+  authors: string[]
+  borrowerId: string
+  borrowDate?: Date
+  returnDate?: Date
 }
 
 const bookSchema = new mongoose.Schema({
@@ -63,6 +63,12 @@ const bookSchema = new mongoose.Schema({
     required: [true, 'please add publishedDate'],
   },
 
+  status: {
+    type: String,
+    enum: Status,
+    default: Status.AVAILABLE,
+  },
+
   authors: [
     {
       type: Schema.Types.ObjectId,
@@ -70,27 +76,17 @@ const bookSchema = new mongoose.Schema({
     },
   ],
 
-  status: {
-    type: String,
-    enum: Status,
-    default: Status.Available,
+  borrowerId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
   },
 
-  borrowerId: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-    },
-  ],
-
-  borrowerDate: {
+  borrowDate: {
     type: Date,
-    default: Date.now(),
   },
 
   returnDate: {
     type: Date,
-    default: Date.now(),
   },
 })
 

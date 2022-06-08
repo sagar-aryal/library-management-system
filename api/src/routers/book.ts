@@ -5,12 +5,24 @@ import {
   getSingleBook,
   updateBook,
   deleteBook,
+  borrowBook,
+  returnBook,
 } from '../controllers/book'
 
 const router = express.Router()
 
 // Every path we define here will get /api/v1/books prefix
-router.route('/').get(getAllBooks).post(createBook)
-router.route('/:bookId').get(getSingleBook).put(updateBook).delete(deleteBook)
+/* router.route('/').get(getAllBooks).post(createBook)
+router.route('/:bookId').get(getSingleBook).put(updateBook).delete(deleteBook) */
+
+router.get('/', getAllBooks)
+router.get('/:bookId', getSingleBook)
+
+router.post('/', createBook)
+router.post('/:bookId/borrow', borrowBook)
+router.post('/:bookId/return', returnBook)
+
+router.put('/:bookId', updateBook)
+router.delete('/:bookId', deleteBook)
 
 export default router
