@@ -4,7 +4,7 @@ export type AuthorDocument = Document & {
   firstName: string
   lastName: string
   biography: string
-  books?: string[]
+  books: string[]
 }
 
 const authorSchema = new mongoose.Schema({
@@ -26,10 +26,12 @@ const authorSchema = new mongoose.Schema({
     maxlength: [2000, 'last name cannot be more than 2000 characters'],
   },
 
-  books: {
-    type: [Schema.Types.ObjectId],
-    ref: 'Book',
-  },
+  books: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Book',
+    },
+  ],
 })
 
 export default mongoose.model<AuthorDocument>('Author', authorSchema)

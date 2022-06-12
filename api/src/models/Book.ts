@@ -13,19 +13,21 @@ export enum Status {
   BORROWED = 'BORROWED',
 }
 
-export type BookDocument = Document & {
+export type Book = {
   isbn: string
   title: string
   description: string
   category: string
   publisher: string
-  publishedDate: Date
+  publishedYear: number
   status: string
   author: string[]
   borrowerId: string
-  borrowDate?: Date
-  returnDate?: Date
+  borrowDate: Date
+  returnDate: Date
 }
+
+export type BookDocument = Book & Document
 
 const bookSchema = new mongoose.Schema({
   isbn: {
@@ -59,7 +61,7 @@ const bookSchema = new mongoose.Schema({
   },
 
   publishedDate: {
-    type: Date,
+    type: Number,
     required: [true, 'please add publishedDate'],
   },
 

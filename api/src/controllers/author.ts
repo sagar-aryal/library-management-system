@@ -22,8 +22,8 @@ export const createAuthor = async (
       description,
     })
 
-    await AuthorService.create(author)
-    res.json(author)
+    const createAuthor = await AuthorService.createAuthor(author)
+    res.json({ author: createAuthor })
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -43,7 +43,7 @@ export const getAllAuthors = async (
   next: NextFunction
 ) => {
   try {
-    res.json(await AuthorService.find())
+    res.json(await AuthorService.getAllAuthors())
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -63,7 +63,8 @@ export const getSingleAuthor = async (
   next: NextFunction
 ) => {
   try {
-    res.json(await AuthorService.findById(req.params.authorId))
+    const authorId = req.params.authorId
+    res.json(await AuthorService.getSingleAuthor(authorId))
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -85,10 +86,7 @@ export const updateAuthor = async (
   try {
     const update = req.body
     const authorId = req.params.authorId
-    const updatedAuthor = await AuthorService.findByIdAndUpdate(
-      authorId,
-      update
-    )
+    const updatedAuthor = await AuthorService.updateAuthor(authorId, update)
     res.json(updatedAuthor)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
@@ -109,7 +107,8 @@ export const deleteAuthor = async (
   next: NextFunction
 ) => {
   try {
-    await AuthorService.findByIdAndDelete(req.params.authorId)
+    const authorId = req.params.authorId
+    await AuthorService.deleteAuthor(authorId)
     res.status(204).end()
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {

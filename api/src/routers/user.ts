@@ -11,6 +11,6 @@ const router = express.Router()
 
 // Every path we define here will get /api/v1/users prefix
 router.route('/').get(getAllUsers).post(createUser)
-router.route('/:bookId').get(getSingleUser).put(updateUser).delete(deleteUser)
+router.route('/:userId').get(getSingleUser).put(updateUser).delete(deleteUser)
 
 export default router

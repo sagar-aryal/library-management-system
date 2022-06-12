@@ -14,29 +14,17 @@ export const createUser = async (
   next: NextFunction
 ) => {
   try {
-    const {
-      SSN,
-      firstName,
-      lastName,
-      address,
-      email,
-      password,
-      role,
-      createdDate,
-    } = req.body
+    const { firstName, lastName, email, password, role } = req.body
 
     const user = new User({
-      SSN,
       firstName,
       lastName,
-      address,
       email,
       password,
       role,
-      createdDate,
     })
 
-    await UserService.create(user)
+    await UserService.createUser(user)
     res.json(user)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
@@ -57,7 +45,7 @@ export const getAllUsers = async (
   next: NextFunction
 ) => {
   try {
-    res.json(await UserService.find())
+    res.json(await UserService.getAllUsers())
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -77,7 +65,7 @@ export const getSingleUser = async (
   next: NextFunction
 ) => {
   try {
-    res.json(await UserService.findById(req.params.userId))
+    res.json(await UserService.getSingleUser(req.params.userId))
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -99,7 +87,7 @@ export const updateUser = async (
   try {
     const update = req.body
     const userId = req.params.userId
-    const updatedUser = await UserService.findByIdAndUpdate(userId, update)
+    const updatedUser = await UserService.updateUser(userId, update)
     res.json(updatedUser)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
@@ -120,7 +108,7 @@ export const deleteUser = async (
   next: NextFunction
 ) => {
   try {
-    await UserService.findByIdAndDelete(req.params.userId)
+    await UserService.deleteUser(req.params.userId)
     res.status(204).end()
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {

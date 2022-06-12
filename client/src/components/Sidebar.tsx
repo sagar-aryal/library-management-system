@@ -8,6 +8,7 @@ import {
   Person,
   Mail,
   Notifications,
+  Attribution,
 } from "@mui/icons-material";
 import {
   Box,
@@ -30,7 +31,13 @@ const Sidebar = () => {
   };
 
   return (
-    <Box flex={1} p={2} sx={{ display: { xs: "none", sm: "block" } }}>
+    <Box
+      flex={1}
+      p={2}
+      sx={{ display: { xs: "none", sm: "block" } }}
+      position="sticky"
+      top={0}
+    >
       <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
         <ListItemButton>
           <ListItemIcon>
@@ -91,6 +98,12 @@ const Sidebar = () => {
         </ListItemButton>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <Attribution />
+              </ListItemIcon>
+              <ListItemText primary="Authors" />
+            </ListItemButton>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
                 <Storefront />

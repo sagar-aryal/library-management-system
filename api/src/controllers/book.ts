@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 
 import Book from '../models/Book'
 import BookService from '../services/book'
-import { BadRequestError } from '../helpers/apiError'
+import { BadRequestError, ForbiddenError } from '../helpers/apiError'
 
 // @desc    crete a new book
 // @route   POST /api/v1/books
@@ -42,7 +42,7 @@ export const createBook = async (
       returnDate,
     })
 
-    const createBook = await BookService.create(book)
+    const createBook = await BookService.createBook(book)
 
     res.json({ book: createBook })
   } catch (error) {
@@ -65,7 +65,7 @@ export const getAllBooks = async (
 ) => {
   try {
     const { page, limit } = req.query as { [key: string]: string }
-    res.json(await BookService.find(page, limit))
+    res.json(await BookService.getAllBooks(page, limit))
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -85,7 +85,7 @@ export const getSingleBook = async (
   next: NextFunction
 ) => {
   try {
-    res.json(await BookService.findById(req.params.bookId))
+    res.json(await BookService.getSingleBook(req.params.bookId))
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))
@@ -107,7 +107,7 @@ export const updateBook = async (
   try {
     const update = req.body
     const bookId = req.params.bookId
-    const updatedBook = await BookService.findByIdAndUpdate(bookId, update)
+    const updatedBook = await BookService.updateBook(bookId, update)
     res.json(updatedBook)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
@@ -128,7 +128,7 @@ export const deleteBook = async (
   next: NextFunction
 ) => {
   try {
-    await BookService.findByIdAndDelete(req.params.bookId)
+    await BookService.deleteBook(req.params.bookId)
     res.status(204).end()
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
@@ -150,7 +150,8 @@ export const borrowBook = async (
 ) => {
   try {
     const bookId = req.params.bookId
-    const userId = req.body.userId
+    const userId = req.body.borrowerId
+    console.log(userId)
     const updatedBook = await BookService.borrowBook(bookId, userId)
     res.json(updatedBook)
   } catch (error) {
@@ -173,7 +174,7 @@ export const returnBook = async (
 ) => {
   try {
     const bookId = req.params.bookId
-    const userId = req.body.userId
+    const userId = req.body.borrowerId
     const updatedBook = await BookService.returnBook(bookId, userId)
     res.json(updatedBook)
   } catch (error) {

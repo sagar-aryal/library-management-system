@@ -3,11 +3,11 @@ import User from '../models/User'
 import Author from '../models/Author'
 import { NotFoundError } from '../helpers/apiError'
 
-const create = async (book: BookDocument): Promise<BookDocument> => {
+const createBook = async (book: BookDocument): Promise<BookDocument> => {
   return book.save()
 }
 
-const find = async (
+const getAllBooks = async (
   pageNum: string,
   limitNum: string
 ): Promise<BookDocument[]> => {
@@ -20,7 +20,7 @@ const find = async (
     .skip(skip)
 }
 
-const findById = async (bookId: string): Promise<BookDocument | null> => {
+const getSingleBook = async (bookId: string): Promise<BookDocument | null> => {
   const foundBook = await Book.findById(bookId)
 
   if (!foundBook) {
@@ -30,11 +30,21 @@ const findById = async (bookId: string): Promise<BookDocument | null> => {
   return foundBook
 }
 
-const findByIdAndUpdate = async (
+const updateBook = async (
   bookId: string,
   update: Partial<BookDocument>
 ): Promise<BookDocument | null> => {
   const foundBook = await Book.findByIdAndUpdate(bookId, update)
+
+  if (!foundBook) {
+    throw new NotFoundError(`Book ${bookId} not found`)
+  }
+
+  return foundBook
+}
+
+const deleteBook = async (bookId: string): Promise<BookDocument | null> => {
+  const foundBook = await Book.findByIdAndDelete(bookId)
 
   if (!foundBook) {
     throw new NotFoundError(`Book ${bookId} not found`)
@@ -56,9 +66,7 @@ const borrowBook = async (
     returnDate,
   }
 
-  const foundBook = await Book.findByIdAndUpdate(bookId, bookUpdate, {
-    new: true,
-  })
+  const foundBook = await Book.findByIdAndUpdate(bookId, bookUpdate)
 
   if (!foundBook) {
     throw new NotFoundError(`Book ${bookId} not found`)
@@ -73,18 +81,6 @@ const borrowBook = async (
   if (foundUser.borrowedBooks.indexOf(bookId) == -1) {
     foundUser.borrowedBooks.push(bookId)
     await foundUser.save()
-  }
-
-  return foundBook
-}
-
-const findByIdAndDelete = async (
-  bookId: string
-): Promise<BookDocument | null> => {
-  const foundBook = await Book.findByIdAndDelete(bookId)
-
-  if (!foundBook) {
-    throw new NotFoundError(`Book ${bookId} not found`)
   }
 
   return foundBook
@@ -187,11 +183,11 @@ const filterBook = async (
 }
 
 export default {
-  create,
-  find,
-  findById,
-  findByIdAndUpdate,
-  findByIdAndDelete,
+  createBook,
+  getAllBooks,
+  getSingleBook,
+  updateBook,
+  deleteBook,
   borrowBook,
   returnBook,
   filterBook,

@@ -1,16 +1,17 @@
 import User, { UserDocument } from '../models/User'
-import { NotFoundError } from '../helpers/apiError'
+import { ForbiddenError, NotFoundError } from '../helpers/apiError'
 
-const create = async (user: UserDocument): Promise<UserDocument> => {
+const createUser = async (user: UserDocument): Promise<UserDocument> => {
+  console.log(user)
   return user.save()
 }
 
-const find = async (): Promise<UserDocument[]> => {
-  return User.find().sort({ lastName: 1, createdDate: -1 })
+const getAllUsers = async (): Promise<UserDocument[]> => {
+  return User.find().sort({ lastName: 1 }).populate('borowedBooks')
 }
 
-const findById = async (userId: string): Promise<UserDocument | null> => {
-  const foundUser = await User.findById(userId)
+const getSingleUser = async (userId: string): Promise<UserDocument | null> => {
+  const foundUser = await User.findById(userId).populate('borowedBooks')
 
   if (!foundUser) {
     throw new NotFoundError(`User ${userId} not found`)
@@ -19,11 +20,13 @@ const findById = async (userId: string): Promise<UserDocument | null> => {
   return foundUser
 }
 
-const findByIdAndUpdate = async (
+const updateUser = async (
   userId: string,
   update: Partial<UserDocument>
 ): Promise<UserDocument | null> => {
-  const foundUser = await User.findByIdAndUpdate(userId, update)
+  const foundUser = await User.findByIdAndUpdate(userId, update, {
+    new: true,
+  }).populate('borowedBooks')
 
   if (!foundUser) {
     throw new NotFoundError(`User ${userId} not found`)
@@ -32,22 +35,31 @@ const findByIdAndUpdate = async (
   return foundUser
 }
 
-const findByIdAndDelete = async (
-  userId: string
-): Promise<UserDocument | null> => {
-  const foundUser = await User.findByIdAndDelete(userId)
-
+const deleteUser = async (userId: string): Promise<UserDocument | null> => {
+  const foundUser = await User.findById(userId).populate('borowedBooks')
   if (!foundUser) {
     throw new NotFoundError(`User ${userId} not found`)
   }
 
-  return foundUser
+  if (foundUser.borrowedBooks.length > 0) {
+    if (!foundUser) {
+      throw new ForbiddenError(`User ${userId} cannot be deleted`)
+    }
+  }
+
+  return foundUser.delete()
+}
+
+// for google-login authentication
+const findUserByEmail = async (email: string): Promise<UserDocument | null> => {
+  return User.findOne({ email })
 }
 
 export default {
-  create,
-  find,
-  findById,
-  findByIdAndUpdate,
-  findByIdAndDelete,
+  createUser,
+  getAllUsers,
+  getSingleUser,
+  updateUser,
+  deleteUser,
+  findUserByEmail,
 }
