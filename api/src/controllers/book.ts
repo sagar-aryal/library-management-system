@@ -21,11 +21,8 @@ export const createBook = async (
       category,
       publisher,
       publishedDate,
-      author,
       status,
-      borrowerId,
-      borrowDate,
-      returnDate,
+      authors,
     } = req.body
 
     const book = new Book({
@@ -35,16 +32,12 @@ export const createBook = async (
       category,
       publisher,
       publishedDate,
-      author,
       status,
-      borrowerId,
-      borrowDate,
-      returnDate,
+      authors,
     })
+    await BookService.createBook(book)
 
-    const createBook = await BookService.createBook(book)
-
-    res.json({ book: createBook })
+    res.json(book)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))

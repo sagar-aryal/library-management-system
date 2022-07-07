@@ -4,7 +4,19 @@ import Author from '../models/Author'
 import { NotFoundError } from '../helpers/apiError'
 
 const createBook = async (book: BookDocument): Promise<BookDocument> => {
-  return book.save()
+  console.log(book)
+  const newBook = await book.save()
+  let i
+  for (i = 0; i < newBook.authors.length; i++) {
+    const authorId = newBook.authors[i]
+    const foundAuthor = await Author.findById(authorId)
+    if (!foundAuthor) {
+      throw new NotFoundError(`Author ${authorId} not found`)
+    }
+    foundAuthor.books.push(newBook._id)
+    await foundAuthor.save()
+  }
+  return newBook
 }
 
 const getAllBooks = async (
@@ -66,7 +78,9 @@ const borrowBook = async (
     returnDate,
   }
 
-  const foundBook = await Book.findByIdAndUpdate(bookId, bookUpdate)
+  const foundBook = await Book.findByIdAndUpdate(bookId, bookUpdate, {
+    new: true,
+  })
 
   if (!foundBook) {
     throw new NotFoundError(`Book ${bookId} not found`)

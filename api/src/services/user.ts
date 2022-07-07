@@ -2,12 +2,13 @@ import User, { UserDocument } from '../models/User'
 import { ForbiddenError, NotFoundError } from '../helpers/apiError'
 
 const createUser = async (user: UserDocument): Promise<UserDocument> => {
-  console.log(user)
-  return user.save()
+  const newUser = await user.save()
+  return newUser
 }
 
 const getAllUsers = async (): Promise<UserDocument[]> => {
-  return User.find().sort({ lastName: 1 }).populate('borowedBooks')
+  const users = await User.find().sort({ lastName: 1 }).populate('borowedBooks')
+  return users
 }
 
 const getSingleUser = async (userId: string): Promise<UserDocument | null> => {
@@ -52,7 +53,8 @@ const deleteUser = async (userId: string): Promise<UserDocument | null> => {
 
 // for google-login authentication
 const findUserByEmail = async (email: string): Promise<UserDocument | null> => {
-  return User.findOne({ email })
+  const user = await User.findOne({ email })
+  return user
 }
 
 export default {

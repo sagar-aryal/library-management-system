@@ -22,8 +22,8 @@ export const createAuthor = async (
       description,
     })
 
-    const createAuthor = await AuthorService.createAuthor(author)
-    res.json({ author: createAuthor })
+    await AuthorService.createAuthor(author)
+    res.json(author)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))

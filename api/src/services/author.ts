@@ -4,7 +4,8 @@ import { ForbiddenError, NotFoundError } from '../helpers/apiError'
 const createAuthor = async (
   author: AuthorDocument
 ): Promise<AuthorDocument> => {
-  return author.save()
+  const newAuthor = await author.save()
+  return newAuthor
 }
 
 const getAllAuthors = async (): Promise<AuthorDocument[]> => {

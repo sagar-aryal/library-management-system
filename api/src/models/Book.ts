@@ -21,7 +21,7 @@ export type Book = {
   publisher: string
   publishedYear: number
   status: string
-  author: string[]
+  authors: string[]
   borrowerId: string
   borrowDate: Date
   returnDate: Date
@@ -71,7 +71,7 @@ const bookSchema = new mongoose.Schema({
     default: Status.AVAILABLE,
   },
 
-  author: [
+  authors: [
     {
       type: Schema.Types.ObjectId,
       ref: 'Author',

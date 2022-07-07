@@ -1,11 +1,12 @@
 import React from "react";
 
-import { Box } from "@mui/material";
 import Books from "./Books";
+
+import { Box } from "@mui/material";
 
 const Rightbar = () => {
   return (
-    <Box flex={4} p={2} sx={{ display: { xs: "none", sm: "block" } }}>
+    <Box flex={5}>
       <Books />
     </Box>
   );
