@@ -1,13 +1,13 @@
 import React from "react";
 
-import Books from "./Books";
+import BooksTable from "./BooksTable";
 
 import { Box } from "@mui/material";
 
 const Rightbar = () => {
   return (
     <Box flex={5}>
-      <Books />
+      <BooksTable />
     </Box>
   );
 };
