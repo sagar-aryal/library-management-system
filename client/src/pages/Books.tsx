@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 import {
   TableBody,
@@ -19,6 +20,7 @@ import {
   Menu,
   MenuItem,
   Fade,
+  ButtonGroup,
 } from "@mui/material";
 import { Clear, Check, MoreVert } from "@mui/icons-material";
 
@@ -59,7 +61,7 @@ const data = [
   },
 ];
 
-const BooksTable = () => {
+const Books = () => {
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<keyof Data>("name");
   const [page, setPage] = useState<number>(0);
@@ -144,7 +146,12 @@ const BooksTable = () => {
             <Typography variant="h5">Books</Typography>
           </Grid>
           <Grid item>
-            <Button variant="contained" size="small">
+            <Button
+              variant="contained"
+              size="small"
+              component={Link}
+              to="/bookform"
+            >
               Add New
             </Button>
           </Grid>
@@ -178,14 +185,14 @@ const BooksTable = () => {
                     <TableCell>{book.publisher}</TableCell>
                     <TableCell> {book.available}</TableCell>
                     <TableCell>
-                      <Button
-                        variant="outlined"
+                      <ButtonGroup
+                        variant="text"
+                        aria-label="text button group"
                         color="inherit"
-                        size="small"
-                        sx={{ mr: 1 }}
                       >
-                        View
-                      </Button>
+                        <Button size="small">View</Button>
+                        <Button size="small">Borrow</Button>
+                      </ButtonGroup>
                       <IconButton
                         aria-label="moveverticon"
                         color="inherit"
@@ -230,4 +237,4 @@ const BooksTable = () => {
   );
 };
 
-export default BooksTable;
+export default Books;

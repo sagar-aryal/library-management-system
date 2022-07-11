@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+
 import {
   AccountBox,
   Article,
@@ -13,7 +15,7 @@ import {
 import {
   Box,
   List,
-  ListItemButton,
+  ListItem,
   ListItemIcon,
   ListItemText,
   Collapse,
@@ -23,6 +25,7 @@ import {
 } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
 
@@ -39,20 +42,20 @@ const Sidebar = () => {
       top={0}
     >
       <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-        <ListItemButton>
+        <ListItem component={Link} to="/">
           <ListItemIcon>
             <Home />
           </ListItemIcon>
-          <ListItemText primary="Homepage" />
-        </ListItemButton>
+          <ListItemText primary="Books" />
+        </ListItem>
 
-        <ListItemButton onClick={handleClick}>
+        {/*   <ListItem onClick={handleClick} component={Link} to="/">
           <ListItemIcon>
             <Article />
           </ListItemIcon>
           <ListItemText primary="Books" />
           {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
+        </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <FormGroup sx={{ pl: 4 }}>
@@ -67,55 +70,55 @@ const Sidebar = () => {
             </FormGroup>
           </List>
         </Collapse>
-
-        <ListItemButton>
+ */}
+        <ListItem>
           <ListItemIcon>
             <Notifications />
           </ListItemIcon>
           <ListItemText primary="Collections" />
-        </ListItemButton>
+        </ListItem>
 
-        <ListItemButton>
+        <ListItem>
           <ListItemIcon>
             <Mail />
           </ListItemIcon>
           <ListItemText primary="Message" />
-        </ListItemButton>
+        </ListItem>
 
-        <ListItemButton>
+        <ListItem>
           <ListItemIcon>
             <Person />
           </ListItemIcon>
           <ListItemText primary="Profile" />
-        </ListItemButton>
+        </ListItem>
 
-        <ListItemButton onClick={handleClick}>
+        <ListItem onClick={handleClick}>
           <ListItemIcon>
             <AccountBox />
           </ListItemIcon>
           <ListItemText primary="Admin" />
           {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
+        </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <Attribution />
-              </ListItemIcon>
-              <ListItemText primary="Authors" />
-            </ListItemButton>
-            <ListItemButton sx={{ pl: 4 }}>
+            <ListItem sx={{ pl: 4 }} component={Link} to="/">
               <ListItemIcon>
                 <Storefront />
               </ListItemIcon>
               <ListItemText primary="Books" />
-            </ListItemButton>
-            <ListItemButton sx={{ pl: 4 }}>
+            </ListItem>
+            <ListItem sx={{ pl: 4 }} component={Link} to="/users">
               <ListItemIcon>
                 <Group />
               </ListItemIcon>
               <ListItemText primary="Users" />
-            </ListItemButton>
+            </ListItem>
+            <ListItem sx={{ pl: 4 }} component={Link} to="/authors">
+              <ListItemIcon>
+                <Attribution />
+              </ListItemIcon>
+              <ListItemText primary="Authors" />
+            </ListItem>
           </List>
         </Collapse>
       </List>

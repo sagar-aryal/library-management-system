@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 import {
   AppBar,
@@ -83,7 +84,16 @@ const Navbar = () => {
   return (
     <AppBar position="sticky">
       <StyledToolbar>
-        <Typography variant="h6" sx={{ display: { xs: "none", sm: "block" } }}>
+        <Typography
+          variant="h6"
+          sx={{
+            display: { xs: "none", sm: "block" },
+            color: "inherit",
+            textDecoration: "none",
+          }}
+          component={Link}
+          to="/"
+        >
           My Library Store
         </Typography>
         <LibraryBooks
