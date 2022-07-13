@@ -16,7 +16,6 @@ import {
   Typography,
   Paper,
   Container,
-  Box,
   Menu,
   MenuItem,
   Fade,
@@ -139,100 +138,102 @@ const Books = () => {
   };
 
   return (
-    <Container>
-      <Box sx={{ maxHeight: 450, width: "100%", mb: 2 }}>
-        <Grid container alignItems="center" spacing={2}>
-          <Grid item sx={{ my: 3 }}>
-            <Typography variant="h5">Books</Typography>
-          </Grid>
-          <Grid item>
-            <Button
-              variant="contained"
-              size="small"
-              component={Link}
-              to="/bookform"
-            >
-              Add New
-            </Button>
-          </Grid>
+    <Container sx={{ maxHeight: 450, width: "100%" }}>
+      <Grid container alignItems="center" spacing={2} mb={2}>
+        <Grid item>
+          <Typography variant="h5">Books</Typography>
         </Grid>
-        <TableContainer component={Paper} sx={{ overflow: "scroll" }}>
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                {header.map((head) => (
-                  <TableCell key={head.id}>
-                    <TableSortLabel
-                      active={orderBy === head.id}
-                      direction={orderBy === head.id ? order : "asc"}
-                      onClick={(event) => handleRequestSort(event, head.id)}
+        <Grid item>
+          <Button
+            variant="contained"
+            size="small"
+            component={Link}
+            to="/bookform"
+          >
+            Add New
+          </Button>
+        </Grid>
+      </Grid>
+      <TableContainer component={Paper} sx={{ overflow: "scroll" }}>
+        <Table aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              {header.map((head) => (
+                <TableCell key={head.id}>
+                  <TableSortLabel
+                    active={orderBy === head.id}
+                    direction={orderBy === head.id ? order : "asc"}
+                    onClick={(event) => handleRequestSort(event, head.id)}
+                  >
+                    {head.label}
+                  </TableSortLabel>
+                </TableCell>
+              ))}
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {stableSort(data, getComparator(order, orderBy))
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((book, index) => (
+                <TableRow key={index}>
+                  <TableCell>{book.name}</TableCell>
+                  <TableCell>{book.authors}</TableCell>
+                  <TableCell>{book.publishedDate}</TableCell>
+                  <TableCell>{book.publisher}</TableCell>
+                  <TableCell> {book.available}</TableCell>
+                  <TableCell>
+                    <ButtonGroup
+                      variant="text"
+                      aria-label="text button group"
+                      color="inherit"
                     >
-                      {head.label}
-                    </TableSortLabel>
+                      <Button variant="outlined" size="small">
+                        View
+                      </Button>
+                      <Button variant="outlined" size="small">
+                        Borrow
+                      </Button>
+                    </ButtonGroup>
+                    <IconButton
+                      aria-label="moveverticon"
+                      color="inherit"
+                      id="fade-button"
+                      aria-controls={open ? "fade-menu" : undefined}
+                      aria-haspopup="true"
+                      aria-expanded={open ? "true" : undefined}
+                      onClick={handleClick}
+                    >
+                      <MoreVert />
+                    </IconButton>
+                    <Menu
+                      id="fade-menu"
+                      MenuListProps={{
+                        "aria-labelledby": "fade-button",
+                      }}
+                      anchorEl={anchorEl}
+                      open={open}
+                      onClose={handleClose}
+                      TransitionComponent={Fade}
+                    >
+                      <MenuItem onClick={handleClose}>Update</MenuItem>
+                      <MenuItem onClick={handleClose}>Delete</MenuItem>
+                    </Menu>
                   </TableCell>
-                ))}
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {stableSort(data, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((book, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{book.name}</TableCell>
-                    <TableCell>{book.authors}</TableCell>
-                    <TableCell>{book.publishedDate}</TableCell>
-                    <TableCell>{book.publisher}</TableCell>
-                    <TableCell> {book.available}</TableCell>
-                    <TableCell>
-                      <ButtonGroup
-                        variant="text"
-                        aria-label="text button group"
-                        color="inherit"
-                      >
-                        <Button size="small">View</Button>
-                        <Button size="small">Borrow</Button>
-                      </ButtonGroup>
-                      <IconButton
-                        aria-label="moveverticon"
-                        color="inherit"
-                        id="fade-button"
-                        aria-controls={open ? "fade-menu" : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? "true" : undefined}
-                        onClick={handleClick}
-                      >
-                        <MoreVert />
-                      </IconButton>
-                      <Menu
-                        id="fade-menu"
-                        MenuListProps={{
-                          "aria-labelledby": "fade-button",
-                        }}
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        TransitionComponent={Fade}
-                      >
-                        <MenuItem onClick={handleClose}>Update</MenuItem>
-                        <MenuItem onClick={handleClose}>Delete</MenuItem>
-                      </Menu>
-                    </TableCell>
-                  </TableRow>
-                ))}
-            </TableBody>
-          </Table>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 50]}
-            component="div"
-            count={data.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </TableContainer>
-      </Box>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 50]}
+          component="div"
+          count={data.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </TableContainer>
     </Container>
   );
 };

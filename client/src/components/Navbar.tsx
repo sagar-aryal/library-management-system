@@ -82,73 +82,75 @@ const UserBox = styled(Box)(({ theme }) => ({
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   return (
-    <AppBar position="sticky">
-      <StyledToolbar>
-        <Typography
-          variant="h6"
-          sx={{
-            display: { xs: "none", sm: "block" },
-            color: "inherit",
-            textDecoration: "none",
-          }}
-          component={Link}
-          to="/"
-        >
-          My Library Store
-        </Typography>
-        <LibraryBooks
-          sx={{
-            fontSize: "48px",
-            display: { xs: "block", sm: "none" },
-            paddingRight: "10px",
-          }}
-        />
-        <SearchBar>
-          <SearchIconWrapper>
-            <Search />
-          </SearchIconWrapper>
-          <StyledInputBase
-            placeholder="Search…"
-            inputProps={{ "aria-label": "search" }}
-          />
-        </SearchBar>
-        <Icons>
-          <Badge badgeContent={4} color="error">
-            <Mail />
-          </Badge>
-          <Badge badgeContent={2} color="error">
-            <Notifications />
-          </Badge>
-          <Avatar
-            sx={{ bgcolor: deepPurple[500] }}
-            onClick={(e) => setOpen(true)}
+    <div style={{ marginBottom: "3rem" }}>
+      <AppBar position="sticky">
+        <StyledToolbar>
+          <Typography
+            variant="h6"
+            sx={{
+              display: { xs: "none", sm: "block" },
+              color: "inherit",
+              textDecoration: "none",
+            }}
+            component={Link}
+            to="/"
           >
-            JD
-          </Avatar>
-        </Icons>
-        <UserBox onClick={(e) => setOpen(true)}>
-          <Avatar sx={{ bgcolor: deepPurple[500] }}>JD</Avatar>
-          <Typography variant="h6">John</Typography>
-        </UserBox>
-      </StyledToolbar>
-      <Menu
-        id="demo-positioned-menu"
-        aria-labelledby="demo-positioned-button"
-        open={open}
-        onClose={(e) => setOpen(false)}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-      >
-        <MenuItem>My account</MenuItem>
-        <MenuItem>Logout</MenuItem>
-      </Menu>
-    </AppBar>
+            My Library Store
+          </Typography>
+          <LibraryBooks
+            sx={{
+              fontSize: "48px",
+              display: { xs: "block", sm: "none" },
+              paddingRight: "10px",
+            }}
+          />
+          <SearchBar>
+            <SearchIconWrapper>
+              <Search />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search…"
+              inputProps={{ "aria-label": "search" }}
+            />
+          </SearchBar>
+          <Icons>
+            <Badge badgeContent={4} color="error">
+              <Mail />
+            </Badge>
+            <Badge badgeContent={2} color="error">
+              <Notifications />
+            </Badge>
+            <Avatar
+              sx={{ bgcolor: deepPurple[500] }}
+              onClick={(e) => setOpen(true)}
+            >
+              JD
+            </Avatar>
+          </Icons>
+          <UserBox onClick={(e) => setOpen(true)}>
+            <Avatar sx={{ bgcolor: deepPurple[500] }}>JD</Avatar>
+            <Typography variant="h6">John</Typography>
+          </UserBox>
+        </StyledToolbar>
+        <Menu
+          id="demo-positioned-menu"
+          aria-labelledby="demo-positioned-button"
+          open={open}
+          onClose={(e) => setOpen(false)}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+        >
+          <MenuItem>My account</MenuItem>
+          <MenuItem>Logout</MenuItem>
+        </Menu>
+      </AppBar>
+    </div>
   );
 };
 
