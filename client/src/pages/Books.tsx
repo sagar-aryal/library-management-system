@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   TableBody,
@@ -45,6 +45,13 @@ const header: readonly Header[] = [
 
 const data = [
   {
+    name: "Full Stack web Development ",
+    authors: "Developer Aryal",
+    publishedDate: "2010",
+    publisher: "Tampa",
+    available: "BORROWED",
+  },
+  {
     name: "Web Development 2022",
     authors: "Sagar Aryal",
     publishedDate: "2018",
@@ -52,11 +59,18 @@ const data = [
     available: "AVAILABLE",
   },
   {
-    name: "Full Stack web Development ",
+    name: "SoftwareDevelopment ",
     authors: "Developer Aryal",
     publishedDate: "2010",
     publisher: "Tampa",
     available: "BORROWED",
+  },
+  {
+    name: "MERN",
+    authors: "Developer Aryal",
+    publishedDate: "2022",
+    publisher: "Tampa",
+    available: "AVAILABLE",
   },
 ];
 
@@ -137,6 +151,9 @@ const Books = () => {
     setPage(0);
   };
 
+  // Used to navigate to update page during onClick event
+  const navigate = useNavigate();
+
   return (
     <Container sx={{ maxHeight: 450, width: "100%" }}>
       <Grid container alignItems="center" spacing={2} mb={2}>
@@ -148,7 +165,7 @@ const Books = () => {
             variant="contained"
             size="small"
             component={Link}
-            to="/bookform"
+            to="/addbook"
           >
             Add New
           </Button>
@@ -181,7 +198,14 @@ const Books = () => {
                   <TableCell>{book.authors}</TableCell>
                   <TableCell>{book.publishedDate}</TableCell>
                   <TableCell>{book.publisher}</TableCell>
-                  <TableCell> {book.available}</TableCell>
+
+                  <TableCell>
+                    {book.available === "AVAILABLE" ? (
+                      <Check style={{ color: "green" }} />
+                    ) : (
+                      <Clear style={{ color: "red" }} />
+                    )}
+                  </TableCell>
                   <TableCell>
                     <ButtonGroup
                       variant="text"
@@ -216,7 +240,15 @@ const Books = () => {
                       onClose={handleClose}
                       TransitionComponent={Fade}
                     >
-                      <MenuItem onClick={handleClose}>Update</MenuItem>
+                      <MenuItem
+                        onClick={() => {
+                          navigate(`/updatebook/${book.name}`, {
+                            replace: true,
+                          });
+                        }}
+                      >
+                        Update
+                      </MenuItem>
                       <MenuItem onClick={handleClose}>Delete</MenuItem>
                     </Menu>
                   </TableCell>

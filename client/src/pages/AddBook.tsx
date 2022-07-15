@@ -2,7 +2,7 @@ import React from "react";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   Grid,
@@ -37,9 +37,38 @@ const names = [
   "Kelly Snyder",
 ];
 
-const BookForm = () => {
-  const notify = () => toast("Bood added successfully !");
+// styling for authors select options
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
 
+const AddBook = () => {
+  // submit notification using react toastify
+  const notify = () => {
+    if (!toast.isActive("📖 Book added successfully!")) {
+      toast.success("📖 Book added successfully", {
+        toastId: "addbook",
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Slide,
+      });
+    }
+  };
+
+  // add new book form using formik and yup validation
   const formik = useFormik({
     initialValues: {
       isbn: "",
@@ -85,6 +114,7 @@ const BookForm = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 required
+                autoFocus
                 name="isbn"
                 type="text"
                 label="ISBN"
@@ -128,6 +158,7 @@ const BookForm = () => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.authors}
+                  MenuProps={MenuProps}
                 >
                   <MenuItem disabled value="">
                     Authors
@@ -184,26 +215,15 @@ const BookForm = () => {
             variant="contained"
             sx={{ my: 5 }}
             onClick={notify}
+            disabled={!formik.isValid}
           >
             Add
           </Button>
-
-          <ToastContainer
-            position="top-right"
-            autoClose={2000}
-            hideProgressBar
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss={false}
-            draggable={false}
-            pauseOnHover={false}
-            toastStyle={{ backgroundColor: "#04890f", color: "#fff" }}
-          />
         </form>
+        {formik.isValid && <ToastContainer />}
       </Container>
     </React.Fragment>
   );
 };
 
-export default BookForm;
+export default AddBook;

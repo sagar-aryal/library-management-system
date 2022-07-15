@@ -6,7 +6,8 @@ import Books from "../pages/Books";
 import { Box } from "@mui/material";
 import Users from "../pages/Users";
 import Authors from "../pages/Authors";
-import BookForm from "../pages/BookForm";
+import AddBook from "../pages/AddBook";
+import UpdateBook from "../pages/UpdateBook";
 
 const Rightbar = () => {
   return (
@@ -15,7 +16,8 @@ const Rightbar = () => {
         <Route index element={<Books />} />
         <Route path="/users" element={<Users />} />
         <Route path="/authors" element={<Authors />} />
-        <Route path="/bookform" element={<BookForm />} />
+        <Route path="/addbook" element={<AddBook />} />
+        <Route path="/updatebook/:bookId" element={<UpdateBook />} />
       </Routes>
     </Box>
   );
