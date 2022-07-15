@@ -2,6 +2,11 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import {
+  useGetAllBooksQuery,
+  useDeleteBookMutation,
+} from "../redux/services/bookApi";
+
+import {
   TableBody,
   TableCell,
   TableContainer,
@@ -22,20 +27,27 @@ import {
   ButtonGroup,
 } from "@mui/material";
 import { Clear, Check, MoreVert } from "@mui/icons-material";
+import { toast, ToastContainer, Slide } from "react-toastify";
 
 interface Header {
-  id: "name" | "authors" | "publisher" | "publishedDate" | "available";
+  id: "isbn" | "name" | "authors" | "publisher" | "publishedDate" | "available";
   label: string;
 }
 
-interface Data {
+export interface BookData {
+  id: number;
+  isbn?: string;
   name: string;
-  authors: string;
+  authors: any;
+  publisher: string;
+  publishedDate: string;
+  available?: "BORROWED" | "AVAILABLE";
 }
 
 type Order = "asc" | "desc";
 
-const header: readonly Header[] = [
+// Table header label
+const header: Header[] = [
   { id: "name", label: "Name" },
   { id: "authors", label: "Authors" },
   { id: "publisher", label: "Publisher" },
@@ -43,43 +55,17 @@ const header: readonly Header[] = [
   { id: "available", label: "Available" },
 ];
 
-const data = [
-  {
-    name: "Full Stack web Development ",
-    authors: "Developer Aryal",
-    publishedDate: "2010",
-    publisher: "Tampa",
-    available: "BORROWED",
-  },
-  {
-    name: "Web Development 2022",
-    authors: "Sagar Aryal",
-    publishedDate: "2018",
-    publisher: "Illonen",
-    available: "AVAILABLE",
-  },
-  {
-    name: "SoftwareDevelopment ",
-    authors: "Developer Aryal",
-    publishedDate: "2010",
-    publisher: "Tampa",
-    available: "BORROWED",
-  },
-  {
-    name: "MERN",
-    authors: "Developer Aryal",
-    publishedDate: "2022",
-    publisher: "Tampa",
-    available: "AVAILABLE",
-  },
-];
-
 const Books = () => {
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<keyof Data>("name");
+  const [orderBy, setOrderBy] = useState<keyof BookData>("name");
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const navigate = useNavigate();
+  const { data, error, isLoading, isSuccess } = useGetAllBooksQuery();
+  // console.log(data);
+  const [deleteBook] = useDeleteBookMutation();
 
   // Action buttion functionality for admins only
   const open = Boolean(anchorEl);
@@ -91,7 +77,6 @@ const Books = () => {
   };
 
   // Sorting functionality
-
   function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
       return -1;
@@ -139,7 +124,6 @@ const Books = () => {
   };
 
   // Pagination functionality
-
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -151,122 +135,177 @@ const Books = () => {
     setPage(0);
   };
 
-  // Used to navigate to update page during onClick event
-  const navigate = useNavigate();
+  // Delete book handler
+  const handleDelete = async (id: any) => {
+    if (window.confirm("Are you sure you want to delete this item?")) {
+      await deleteBook(id);
+      toast.success("Book deleted successfully !", {
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        transition: Slide,
+      });
+    }
+  };
 
   return (
-    <Container sx={{ maxHeight: 450, width: "100%" }}>
-      <Grid container alignItems="center" spacing={2} mb={2}>
-        <Grid item>
-          <Typography variant="h5">Books</Typography>
-        </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            size="small"
-            component={Link}
-            to="/addbook"
+    <>
+      {error ? (
+        <Typography variant="h5">Ops! Data not found</Typography>
+      ) : isLoading ? (
+        <Typography variant="h5">Loading...</Typography>
+      ) : isSuccess ? (
+        <Container sx={{ maxHeight: 450, width: "100%" }}>
+          <Grid container alignItems="center" spacing={2} mb={2}>
+            <Grid item>
+              <Typography variant="h5">Books</Typography>
+            </Grid>
+            <Grid item>
+              <Button
+                variant="contained"
+                size="small"
+                component={Link}
+                to="/addbook"
+              >
+                Add New
+              </Button>
+            </Grid>
+          </Grid>
+          <TableContainer
+            component={Paper}
+            sx={{ maxHeight: 440, overflow: "scroll" }}
           >
-            Add New
-          </Button>
-        </Grid>
-      </Grid>
-      <TableContainer component={Paper} sx={{ overflow: "scroll" }}>
-        <Table aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              {header.map((head) => (
-                <TableCell key={head.id}>
-                  <TableSortLabel
-                    active={orderBy === head.id}
-                    direction={orderBy === head.id ? order : "asc"}
-                    onClick={(event) => handleRequestSort(event, head.id)}
-                  >
-                    {head.label}
-                  </TableSortLabel>
-                </TableCell>
-              ))}
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {stableSort(data, getComparator(order, orderBy))
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((book, index) => (
-                <TableRow key={index}>
-                  <TableCell>{book.name}</TableCell>
-                  <TableCell>{book.authors}</TableCell>
-                  <TableCell>{book.publishedDate}</TableCell>
-                  <TableCell>{book.publisher}</TableCell>
-
-                  <TableCell>
-                    {book.available === "AVAILABLE" ? (
-                      <Check style={{ color: "green" }} />
-                    ) : (
-                      <Clear style={{ color: "red" }} />
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <ButtonGroup
-                      variant="text"
-                      aria-label="text button group"
-                      color="inherit"
-                    >
-                      <Button variant="outlined" size="small">
-                        View
-                      </Button>
-                      <Button variant="outlined" size="small">
-                        Borrow
-                      </Button>
-                    </ButtonGroup>
-                    <IconButton
-                      aria-label="moveverticon"
-                      color="inherit"
-                      id="fade-button"
-                      aria-controls={open ? "fade-menu" : undefined}
-                      aria-haspopup="true"
-                      aria-expanded={open ? "true" : undefined}
-                      onClick={handleClick}
-                    >
-                      <MoreVert />
-                    </IconButton>
-                    <Menu
-                      id="fade-menu"
-                      MenuListProps={{
-                        "aria-labelledby": "fade-button",
-                      }}
-                      anchorEl={anchorEl}
-                      open={open}
-                      onClose={handleClose}
-                      TransitionComponent={Fade}
-                    >
-                      <MenuItem
-                        onClick={() => {
-                          navigate(`/updatebook/${book.name}`, {
-                            replace: true,
-                          });
-                        }}
+            <Table stickyHeader aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  {header.map((head) => (
+                    <TableCell key={head.id}>
+                      <TableSortLabel
+                        active={orderBy === head.id}
+                        direction={orderBy === head.id ? order : "asc"}
+                        onClick={(event) => handleRequestSort(event, head.id)}
                       >
-                        Update
-                      </MenuItem>
-                      <MenuItem onClick={handleClose}>Delete</MenuItem>
-                    </Menu>
-                  </TableCell>
+                        {head.label}
+                      </TableSortLabel>
+                    </TableCell>
+                  ))}
+                  <TableCell>Actions</TableCell>
                 </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-        <TablePagination
-          rowsPerPageOptions={[10, 25, 50]}
-          component="div"
-          count={data.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </TableContainer>
-    </Container>
+              </TableHead>
+              <TableBody>
+                {stableSort(data, getComparator(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((book) => (
+                    <TableRow key={book.id}>
+                      <TableCell>{book.name}</TableCell>
+                      <TableCell>
+                        {book.authors.map((author: string) => (
+                          <li key={author} style={{ listStyle: "none" }}>
+                            {author}
+                          </li>
+                        ))}
+                      </TableCell>
+                      <TableCell>{book.publisher}</TableCell>
+                      <TableCell>{book.publishedDate}</TableCell>
+
+                      <TableCell>
+                        {book.available === "AVAILABLE" ? (
+                          <Check style={{ color: "green" }} />
+                        ) : (
+                          <Clear style={{ color: "red" }} />
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <ButtonGroup
+                          variant="text"
+                          aria-label="text button group"
+                          color="inherit"
+                        >
+                          <Button
+                            size="small"
+                            onClick={() => {
+                              navigate(`/books/${book.id}`, {
+                                replace: true,
+                              });
+                            }}
+                          >
+                            View
+                          </Button>
+                          <Button size="small">Borrow</Button>
+                          <Button
+                            size="small"
+                            onClick={() => {
+                              navigate(`/updatebook/${book.id}`, {
+                                replace: true,
+                              });
+                            }}
+                          >
+                            Update
+                          </Button>
+
+                          <IconButton
+                            aria-label="moveverticon"
+                            color="inherit"
+                            id="fade-button"
+                            aria-controls={open ? "fade-menu" : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? "true" : undefined}
+                            onClick={handleClick}
+                          >
+                            <MoreVert />
+                          </IconButton>
+                          <Menu
+                            id="fade-menu"
+                            MenuListProps={{
+                              "aria-labelledby": "fade-button",
+                            }}
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            TransitionComponent={Fade}
+                          >
+                            <MenuItem
+                              onClick={() => {
+                                navigate(`/updatebook/${book.id}`, {
+                                  replace: true,
+                                });
+                              }}
+                            >
+                              Update
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => {
+                                handleDelete(book.id);
+                                handleClose();
+                              }}
+                            >
+                              Delete
+                            </MenuItem>
+                          </Menu>
+                        </ButtonGroup>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 50]}
+            component="div"
+            count={data.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+          <ToastContainer />
+        </Container>
+      ) : null}
+    </>
   );
 };
 

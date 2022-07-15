@@ -1,4 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+
+import { BookData } from "./Books";
+import {
+  useAddBookMutation,
+  useGetBookByIdQuery,
+} from "../redux/services/bookApi";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -15,14 +22,6 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-
-interface FormValues {
-  isbn: string;
-  title: string;
-  authors: string[];
-  publisher: string;
-  publishedDate: string;
-}
 
 const names = [
   "Oliver Hansen",
@@ -49,10 +48,37 @@ const MenuProps = {
   },
 };
 
+const initialValues = {
+  isbn: "",
+  name: "",
+  authors: [],
+  publisher: "",
+  publishedDate: "",
+};
+
 const AddBook = () => {
+  const [formValue, setFormValue] = useState(initialValues);
+  const [editBoook, setEditBook] = useState<boolean>(false);
+  const { id } = useParams();
+  const [addBook] = useAddBookMutation();
+  const { data, error, isLoading, isSuccess } = useGetBookByIdQuery(id!);
+  console.log(data);
+
+  useEffect(() => {
+    if (id) {
+      setEditBook(true);
+      if (data) {
+        setFormValue({ ...data });
+      }
+    } else {
+      setEditBook(false);
+      setFormValue({ ...formValue });
+    }
+  }, [id, data]);
+
   // submit notification using react toastify
   const notify = () => {
-    if (!toast.isActive("📖 Book added successfully!")) {
+    if (!editBoook && !toast.isActive("📖 Book added successfully!")) {
       toast.success("📖 Book added successfully", {
         toastId: "addbook",
         position: "top-right",
@@ -65,19 +91,27 @@ const AddBook = () => {
         theme: "colored",
         transition: Slide,
       });
+    } else {
+      if (!toast.isActive("📖 Book updated successfully!")) {
+        toast.success("📖 Book updated successfully", {
+          toastId: "updatebook",
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          transition: Slide,
+        });
+      }
     }
   };
 
   // add new book form using formik and yup validation
   const formik = useFormik({
-    initialValues: {
-      isbn: "",
-      title: "",
-      authors: [],
-      publishedDate: "",
-      publisher: "",
-    },
-
+    initialValues: initialValues,
     validationSchema: Yup.object({
       isbn: Yup.string()
         .required("Required")
@@ -85,7 +119,7 @@ const AddBook = () => {
           /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/,
           "ISBN must match both the old 10 digit ISBNs and the new 13 digit ISBNs"
         ),
-      title: Yup.string()
+      name: Yup.string()
         .max(15, "Must be 15 characters or less")
         .required("Required"),
       authors: Yup.array().required("Required"),
@@ -97,8 +131,9 @@ const AddBook = () => {
         .matches(/^\d{4}$/, "Must be a published year"),
     }),
 
-    onSubmit: (values: FormValues, { resetForm }) => {
+    onSubmit: async (values: BookData, { resetForm }) => {
       console.log(values);
+      await addBook(values);
       resetForm();
     },
   });
@@ -107,7 +142,7 @@ const AddBook = () => {
     <React.Fragment>
       <Container maxWidth="sm">
         <Typography variant="h6" gutterBottom>
-          Add New Book
+          {!id ? "Add New Book" : "Update a Book"}
         </Typography>
         <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={3}>
@@ -132,17 +167,17 @@ const AddBook = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 required
-                name="title"
+                name="name"
                 type="text"
-                label="Title"
+                label="Name"
                 fullWidth
                 variant="outlined"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.title}
+                value={formik.values.name}
               />
-              {formik.touched.title && formik.errors.title && (
-                <div style={{ color: "red" }}>{formik.errors.title}</div>
+              {formik.touched.name && formik.errors.name && (
+                <div style={{ color: "red" }}>{formik.errors.name}</div>
               )}
             </Grid>
 
@@ -160,7 +195,7 @@ const AddBook = () => {
                   value={formik.values.authors}
                   MenuProps={MenuProps}
                 >
-                  <MenuItem disabled value="">
+                  <MenuItem disabled value=" ">
                     Authors
                   </MenuItem>
                   {names.map((name) => (
@@ -178,7 +213,7 @@ const AddBook = () => {
               <TextField
                 required
                 name="publisher"
-                type="text"
+                type="string"
                 label="Publisher"
                 fullWidth
                 variant="outlined"
@@ -194,7 +229,7 @@ const AddBook = () => {
               <TextField
                 required
                 name="publishedDate"
-                type="text"
+                type="string"
                 label="Published Date"
                 fullWidth
                 variant="outlined"
@@ -217,7 +252,7 @@ const AddBook = () => {
             onClick={notify}
             disabled={!formik.isValid}
           >
-            Add
+            {!id ? "Add" : "Update"}
           </Button>
         </form>
         {formik.isValid && <ToastContainer />}

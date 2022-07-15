@@ -82,8 +82,8 @@ const UserBox = styled(Box)(({ theme }) => ({
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   return (
-    <div style={{ marginBottom: "3rem" }}>
-      <AppBar position="sticky">
+    <div style={{ marginBottom: "5rem" }}>
+      <AppBar>
         <StyledToolbar>
           <Typography
             variant="h6"
