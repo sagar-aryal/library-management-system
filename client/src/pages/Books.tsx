@@ -35,7 +35,7 @@ interface Header {
 }
 
 export interface BookData {
-  id: number;
+  id?: number;
   isbn?: string;
   name: string;
   authors: any;
@@ -203,11 +203,12 @@ const Books = () => {
                     <TableRow key={book.id}>
                       <TableCell>{book.name}</TableCell>
                       <TableCell>
-                        {book.authors.map((author: string) => (
-                          <li key={author} style={{ listStyle: "none" }}>
-                            {author}
-                          </li>
-                        ))}
+                        {Array.isArray(book.authors) &&
+                          book.authors.map((author: string) => (
+                            <li key={author} style={{ listStyle: "none" }}>
+                              {author}
+                            </li>
+                          ))}
                       </TableCell>
                       <TableCell>{book.publisher}</TableCell>
                       <TableCell>{book.publishedDate}</TableCell>

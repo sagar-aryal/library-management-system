@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { BookData } from "./Books";
 import {
   useAddBookMutation,
   useGetBookByIdQuery,
+  useUpdateBookMutation,
 } from "../redux/services/bookApi";
 
 import { useFormik } from "formik";
@@ -51,34 +52,32 @@ const MenuProps = {
 const initialValues = {
   isbn: "",
   name: "",
-  authors: [],
+  authors: [""],
   publisher: "",
   publishedDate: "",
 };
 
 const AddBook = () => {
-  const [formValue, setFormValue] = useState(initialValues);
-  const [editBoook, setEditBook] = useState<boolean>(false);
+  const [formValues, setFormValues] = useState<BookData>(initialValues);
+
+  const navigate = useNavigate();
   const { id } = useParams();
   const [addBook] = useAddBookMutation();
-  const { data, error, isLoading, isSuccess } = useGetBookByIdQuery(id!);
-  console.log(data);
+  const { data } = useGetBookByIdQuery(id!);
+  const [updateBook] = useUpdateBookMutation();
 
   useEffect(() => {
-    if (id) {
-      setEditBook(true);
-      if (data) {
-        setFormValue({ ...data });
-      }
+    if (id && data) {
+      const fields = ["isbn", "name", "authors", "publisher", "publishedDate"];
+      fields.forEach(() => setFormValues({ ...data }));
     } else {
-      setEditBook(false);
-      setFormValue({ ...formValue });
+      setFormValues({ ...initialValues });
     }
   }, [id, data]);
 
-  // submit notification using react toastify
+  // add and update notification using react toastify
   const notify = () => {
-    if (!editBoook && !toast.isActive("📖 Book added successfully!")) {
+    if (!id && !toast.isActive("📖 Book added successfully!")) {
       toast.success("📖 Book added successfully", {
         toastId: "addbook",
         position: "top-right",
@@ -111,7 +110,8 @@ const AddBook = () => {
 
   // add new book form using formik and yup validation
   const formik = useFormik({
-    initialValues: initialValues,
+    initialValues: formValues,
+    enableReinitialize: true,
     validationSchema: Yup.object({
       isbn: Yup.string()
         .required("Required")
@@ -133,8 +133,15 @@ const AddBook = () => {
 
     onSubmit: async (values: BookData, { resetForm }) => {
       console.log(values);
-      await addBook(values);
-      resetForm();
+      if (id) {
+        await updateBook(values);
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      } else {
+        await addBook(values);
+        resetForm();
+      }
     },
   });
 

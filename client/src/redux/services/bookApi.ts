@@ -7,12 +7,12 @@ export const bookApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/" }),
   tagTypes: ["Books"], // tagTypes are for automatically fetching data from updated server
   endpoints: (builder) => ({
-    getAllBooks: builder.query<BookData[], void>({
+    getAllBooks: builder.query<BookData[] | any, void>({
       query: () => "books",
       providesTags: ["Books"],
     }),
 
-    getBookById: builder.query<BookData, string>({
+    getBookById: builder.query<BookData | any, string>({
       query: (id) => `books/${id}`,
       providesTags: ["Books"],
     }),
@@ -22,6 +22,15 @@ export const bookApi = createApi({
         url: `books`,
         method: "POST",
         body,
+      }),
+      invalidatesTags: ["Books"],
+    }),
+
+    updateBook: builder.mutation<void, BookData>({
+      query: ({ id, ...rest }) => ({
+        url: `books/${id}`,
+        method: "PUT",
+        body: rest,
       }),
       invalidatesTags: ["Books"],
     }),
@@ -41,5 +50,6 @@ export const {
   useGetAllBooksQuery,
   useGetBookByIdQuery,
   useAddBookMutation,
+  useUpdateBookMutation,
   useDeleteBookMutation,
 } = bookApi;

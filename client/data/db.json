@@ -1,23 +1,10 @@
 {
   "books": [
     {
-      "id": 1,
-      "isbn": "538076232-8",
-      "name": "rhoncus aliquet pulvinar sed",
-      "authors": [
-        "Westleigh Duffy"
-      ],
-      "publisher": "Treutel Inc",
-      "publishedDate": "1998",
-      "available": "BORROWED"
-    },
-    {
       "id": 2,
       "isbn": "437313859-1",
       "name": "odio elementum eu interdum eu",
-      "authors": [
-        "Tess Mussett"
-      ],
+      "authors": ["Tess Mussett"],
       "publisher": "Ritchie Group",
       "publishedDate": "2002",
       "available": "AVAILABLE"
@@ -26,10 +13,7 @@
       "id": 3,
       "isbn": "944521350-5",
       "name": "integer ac",
-      "authors": [
-        "Chicky McMonnies",
-        "Gulgowski Herzog"
-      ],
+      "authors": ["Chicky McMonnies", "Gulgowski Herzog"],
       "publisher": "Corkery-Ortiz",
       "publishedDate": "2007",
       "available": "AVAILABLE"
@@ -38,10 +22,7 @@
       "id": 4,
       "isbn": "205463006-3",
       "name": "et",
-      "authors": [
-        "Bengt Lovstrom",
-        "Dulcie Ennor"
-      ],
+      "authors": ["Bengt Lovstrom", "Dulcie Ennor"],
       "publisher": "Murphy and Sons",
       "publishedDate": "1992",
       "available": "BORROWED"
@@ -50,9 +31,7 @@
       "id": 5,
       "isbn": "866711881-8",
       "name": "vivamus",
-      "authors": [
-        "Berenice Spurr"
-      ],
+      "authors": ["Berenice Spurr"],
       "publisher": "Kihn-Fay",
       "publishedDate": 2010,
       "available": "BORROWED"
@@ -61,10 +40,7 @@
       "id": 6,
       "isbn": "389756842-1",
       "name": "ante vivamus tortor duis",
-      "authors": [
-        "Kalie Carlson",
-        "Dulcie Ennor"
-      ],
+      "authors": ["Kalie Carlson", "Dulcie Ennor"],
       "publisher": "Dibbert",
       "publishedDate": "1964",
       "available": "BORROWED"
@@ -73,9 +49,7 @@
       "id": 7,
       "isbn": "593829002-3",
       "name": "sapien cursus vestibulum",
-      "authors": [
-        "Kalie Carlson"
-      ],
+      "authors": ["Kalie Carlson"],
       "publisher": "Stiedemann LLC",
       "publishedDate": "2012",
       "available": "AVAILABLE"
@@ -84,9 +58,7 @@
       "id": 8,
       "isbn": "972164900-7",
       "name": "sed",
-      "authors": [
-        "Gulgowski Herzog"
-      ],
+      "authors": ["Gulgowski Herzog"],
       "publisher": "Leuschke-Parisian",
       "publishedDate": "1997",
       "available": "BORROWED"
@@ -95,9 +67,7 @@
       "id": 9,
       "isbn": "260182550-2",
       "name": "turpis adipiscing",
-      "authors": [
-        "Kalie Carlson"
-      ],
+      "authors": ["Kalie Carlson"],
       "publisher": "Brown",
       "publishedDate": "2004",
       "available": "AVAILABLE"
@@ -106,9 +76,7 @@
       "id": 10,
       "isbn": "698103204-2",
       "name": "id massa",
-      "authors": [
-        "Dulcie Ennor"
-      ],
+      "authors": ["Dulcie Ennor"],
       "publisher": "Sipes Inc",
       "publishedDate": "1983",
       "available": "BORROWED"
@@ -117,32 +85,25 @@
       "id": 11,
       "isbn": "573083132-3",
       "name": "ut mauris eget massa",
-      "authors": [
-        "Caryl Weatherby"
-      ],
+      "authors": ["Caryl Weatherby"],
       "publisher": "Corwin-Altenwerth",
       "publishedDate": "1991",
       "available": "BORROWED"
     },
     {
-      "id": 12,
       "isbn": "907171127-7",
-      "name": "aliquet massa id",
-      "authors": [
-        "Glennie Blakeborough",
-        "Gulgowski Herzog"
-      ],
+      "name": "aliquet massa",
+      "authors": ["Glennie Blakeborough", "Gulgowski Herzog"],
       "publisher": "McLaughlin",
       "publishedDate": "1998",
-      "available": "AVAILABLE"
+      "available": "AVAILABLE",
+      "id": 12
     },
     {
       "id": 13,
       "isbn": "213678415-3",
       "name": "porta volutpat",
-      "authors": [
-        "Bengt Lovstrom"
-      ],
+      "authors": ["Bengt Lovstrom"],
       "publisher": "Langworth-Ernser",
       "publishedDate": "1992",
       "available": "AVAILABLE"
@@ -151,12 +112,7 @@
       "id": 14,
       "isbn": "736544896-2",
       "name": "primis in faucibus",
-      "authors": [
-        "Kalie Carlson",
-        "Gleason Jaskolski",
-        "Chicky McMonnies",
-        ""
-      ],
+      "authors": ["Kalie Carlson", "Gleason Jaskolski", "Chicky McMonnies", ""],
       "publisher": "Wilderman",
       "publishedDate": "2001",
       "available": "BORROWED"
@@ -165,10 +121,7 @@
       "id": 15,
       "isbn": "021164860-4",
       "name": "odio cras mi pede malesuada",
-      "authors": [
-        "Gulgowski Herzog",
-        "Westleigh Duffy"
-      ],
+      "authors": ["Gulgowski Herzog", "Westleigh Duffy"],
       "publisher": "Brakus-Bartoletti",
       "publishedDate": "2001",
       "available": "AVAILABLE"
@@ -176,13 +129,26 @@
     {
       "isbn": "111111111-1",
       "name": "test add",
-      "authors": [
-        "Omar Alexander",
-        "Van Henry"
-      ],
+      "authors": ["Omar Alexander", "Van Henry"],
       "publisher": "devmad",
       "publishedDate": "2022",
       "id": 16
+    },
+    {
+      "isbn": "222222222-2",
+      "name": "test again",
+      "authors": ["April Tucker"],
+      "publisher": "dev2",
+      "publishedDate": "2022",
+      "id": 17
+    },
+    {
+      "isbn": "123456790-1",
+      "name": "update test",
+      "authors": ["", "Oliver Hansen", "Ralph Hubbard", "Omar Alexander"],
+      "publisher": "devea",
+      "publishedDate": "2022",
+      "id": 18
     }
   ],
   "authors": [
