@@ -236,8 +236,17 @@ const Books = () => {
                           >
                             View
                           </Button>
-                          <Button size="small">Borrow</Button>
+
                           <Button
+                            size="small"
+                            disabled={
+                              book.available === "BORROWED" ? true : false
+                            }
+                          >
+                            Borrow
+                          </Button>
+
+                          {/*  <Button
                             size="small"
                             onClick={() => {
                               navigate(`/updatebook/${book.id}`, {
@@ -246,7 +255,7 @@ const Books = () => {
                             }}
                           >
                             Update
-                          </Button>
+                          </Button> */}
 
                           <IconButton
                             aria-label="moveverticon"
