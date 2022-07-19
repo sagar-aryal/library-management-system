@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import {
-  useGetAllUsersQuery,
-  useDeleteUserMutation,
-} from "../redux/services/userApi";
+  useGetAllAuthorsQuery,
+  useDeleteAuthorMutation,
+} from "../redux/services/authorApi";
 
 import {
   TableBody,
@@ -23,20 +23,20 @@ import {
   Stack,
   IconButton,
 } from "@mui/material";
-import { Edit, Delete } from "@mui/icons-material";
+import { Visibility, Edit, Delete } from "@mui/icons-material";
 import { toast, ToastContainer, Slide } from "react-toastify";
 
 interface Header {
-  id: "firstName" | "lastName" | "email" | "borrowedBooks";
+  id: "firstName" | "lastName" | "biography" | "books";
   label: string;
 }
 
-export interface UserData {
+export interface AuthorData {
   _id?: string;
   firstName: string;
   lastName: string;
-  email: string;
-  borrowedBooks: string[];
+  biography?: string;
+  books: string[];
 }
 
 type Order = "asc" | "desc";
@@ -45,20 +45,19 @@ type Order = "asc" | "desc";
 const header: Header[] = [
   { id: "firstName", label: "First Name" },
   { id: "lastName", label: "Last Name" },
-  { id: "email", label: "Email" },
-  { id: "borrowedBooks", label: "Borrowed Books" },
+  { id: "biography", label: "Books" },
 ];
 
-const Users = () => {
+const Authors = () => {
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<keyof UserData>("firstName");
+  const [orderBy, setOrderBy] = useState<keyof AuthorData>("firstName");
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
 
   const navigate = useNavigate();
-  const { data, error, isLoading, isSuccess } = useGetAllUsersQuery();
+  const { data, error, isLoading, isSuccess } = useGetAllAuthorsQuery();
   // console.log(data);
-  const [deleteUser] = useDeleteUserMutation();
+  const [deleteAuthor] = useDeleteAuthorMutation();
 
   // Sorting functionality
   function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -119,11 +118,11 @@ const Users = () => {
     setPage(0);
   };
 
-  // Delete user handler
+  // Delete author handler
   const handleDelete = async (id: any) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
-      await deleteUser(id);
-      toast.success("User deleted successfully !", {
+      await deleteAuthor(id);
+      toast.success("Author deleted successfully !", {
         autoClose: 1000,
         hideProgressBar: false,
         closeOnClick: true,
@@ -146,14 +145,14 @@ const Users = () => {
         <Container sx={{ maxHeight: 450, width: "100%" }}>
           <Grid container alignItems="center" spacing={2} mb={2}>
             <Grid item>
-              <Typography variant="h5">Users</Typography>
+              <Typography variant="h5">Authors</Typography>
             </Grid>
             <Grid item>
               <Button
                 variant="contained"
                 size="small"
                 component={Link}
-                to="/adduser"
+                to="/addauthor"
               >
                 Add New
               </Button>
@@ -183,14 +182,13 @@ const Users = () => {
               <TableBody>
                 {stableSort(data, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((user) => (
-                    <TableRow key={user._id}>
-                      <TableCell>{user.firstName}</TableCell>
-                      <TableCell>{user.lastName}</TableCell>
-                      <TableCell>{user.email}</TableCell>
+                  .map((author) => (
+                    <TableRow key={author._id}>
+                      <TableCell>{author.firstName}</TableCell>
+                      <TableCell>{author.lastName}</TableCell>
                       <TableCell>
-                        {Array.isArray(user.borrowedBooks) &&
-                          user.borrowedBooks.map((book: string) => (
+                        {Array.isArray(author.books) &&
+                          author.books.map((book: string) => (
                             <li key={book} style={{ listStyle: "none" }}>
                               {book}
                             </li>
@@ -202,7 +200,18 @@ const Users = () => {
                             size="small"
                             color="primary"
                             onClick={() => {
-                              navigate(`/updateuser/${user._id}`, {
+                              navigate(`/authors/${author._id}`, {
+                                replace: true,
+                              });
+                            }}
+                          >
+                            <Visibility />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            color="primary"
+                            onClick={() => {
+                              navigate(`/updateauthor/${author._id}`, {
                                 replace: true,
                               });
                             }}
@@ -213,7 +222,7 @@ const Users = () => {
                             size="small"
                             color="error"
                             onClick={() => {
-                              handleDelete(user._id);
+                              handleDelete(author._id);
                             }}
                           >
                             <Delete />
@@ -241,4 +250,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Authors;

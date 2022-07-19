@@ -8,7 +8,7 @@ import UserService from '../services/user'
 // you might have a whitelist of admins.
 
 const isAdmin = (email: string) => {
-  if (email !== '@integrify.io') return false
+  if (email !== 'integrify.io') return false
   return true
 }
 
@@ -35,10 +35,10 @@ const loginWithGoogle = () => {
 
         if (!user) {
           user = {
-            firstName: parsedToken.payload.given_name || '',
-            lastName: parsedToken.payload.family_name || '',
+            firstName: parsedToken.payload.given_name,
+            lastName: parsedToken.payload.family_name,
             email: parsedToken.payload.email,
-            role: isAdmin(parsedToken.payload.email) ? 'ADMIN' : 'USER',
+            role: isAdmin(parsedToken.payload.hd) ? 'ADMIN' : 'USER',
           } as UserDocument
 
           const newUser = new User(user)

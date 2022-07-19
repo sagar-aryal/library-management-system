@@ -7,6 +7,7 @@ import {
   useGetBookByIdQuery,
   useUpdateBookMutation,
 } from "../redux/services/bookApi";
+import { useGetAllAuthorsQuery } from "../redux/services/authorApi";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -17,42 +18,16 @@ import {
   Typography,
   TextField,
   Button,
-  Select,
-  MenuItem,
   Container,
-  FormControl,
-  InputLabel,
+  MenuItem,
 } from "@mui/material";
-
-const names = [
-  "Oliver Hansen",
-  "Van Henry",
-  "April Tucker",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder",
-];
-
-// styling for authors select options
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
 
 const initialValues = {
   isbn: "",
-  name: "",
-  authors: [""],
+  title: "",
+  description: "",
+  category: "",
+  authors: [],
   publisher: "",
   publishedDate: "",
 };
@@ -65,6 +40,7 @@ const AddBook = () => {
   const [addBook] = useAddBookMutation();
   const { data } = useGetBookByIdQuery(id!);
   const [updateBook] = useUpdateBookMutation();
+  const { data: authors } = useGetAllAuthorsQuery();
 
   useEffect(() => {
     if (id && data) {
@@ -119,12 +95,16 @@ const AddBook = () => {
           /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/,
           "ISBN must match both the old 10 digit ISBNs and the new 13 digit ISBNs"
         ),
-      name: Yup.string()
-        .max(15, "Must be 15 characters or less")
+      title: Yup.string()
+        .max(50, "Must be 50 characters or less")
         .required("Required"),
+      description: Yup.string()
+        .max(1500, "Must be 1500 characters or less")
+        .required("Required"),
+      category: Yup.string().required("Required"),
       authors: Yup.array().required("Required"),
       publisher: Yup.string()
-        .max(20, "Must be 15 characters or less")
+        .max(50, "Must be 50 characters or less")
         .required("Required"),
       publishedDate: Yup.string()
         .required("Required")
@@ -174,48 +154,88 @@ const AddBook = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 required
-                name="name"
+                name="title"
                 type="text"
                 label="Name"
                 fullWidth
                 variant="outlined"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.name}
+                value={formik.values.title}
               />
-              {formik.touched.name && formik.errors.name && (
-                <div style={{ color: "red" }}>{formik.errors.name}</div>
+              {formik.touched.title && formik.errors.title && (
+                <div style={{ color: "red" }}>{formik.errors.title}</div>
               )}
             </Grid>
 
             <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel>Authors *</InputLabel>
-                <Select
-                  name="authors"
-                  type="text"
-                  required
-                  multiple
-                  label="Authors *"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  value={formik.values.authors}
-                  MenuProps={MenuProps}
-                >
-                  <MenuItem disabled value=" ">
-                    Authors
-                  </MenuItem>
-                  {names.map((name) => (
-                    <MenuItem key={name} value={name}>
-                      {name}
+              <TextField
+                required
+                name="description"
+                type="text"
+                label="Description"
+                multiline
+                rows={3}
+                fullWidth
+                variant="outlined"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.description}
+              />
+              {formik.touched.description && formik.errors.description && (
+                <div style={{ color: "red" }}>{formik.errors.description}</div>
+              )}
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                select
+                required
+                name="category"
+                label="Select Category"
+                fullWidth
+                variant="outlined"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.category}
+              >
+                <MenuItem value="DRAMA">Drama</MenuItem>
+                <MenuItem value="FICTION">Fiction</MenuItem>
+                <MenuItem value="FOLKTALE">Folktale</MenuItem>
+                <MenuItem value="NONFICTION">Nonfiction</MenuItem>
+                <MenuItem value="POETRY">Poetry</MenuItem>
+              </TextField>
+              {formik.touched.category && formik.errors.category && (
+                <div style={{ color: "red" }}>{formik.errors.category}</div>
+              )}
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                select
+                required
+                name="authors"
+                label="Select Authors"
+                fullWidth
+                multiline
+                variant="outlined"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.authors}
+                SelectProps={{ multiple: true }}
+              >
+                {authors &&
+                  authors.map((author: any) => (
+                    <MenuItem key={author._id} value={author._id}>
+                      {author.firstName} {author.lastName}
                     </MenuItem>
                   ))}
-                </Select>
-                {formik.touched.authors && formik.errors.authors && (
-                  <div style={{ color: "red" }}>{formik.errors.authors}</div>
-                )}
-              </FormControl>
+              </TextField>
+              {formik.touched.authors && formik.errors.authors && (
+                <div style={{ color: "red" }}>{formik.errors.authors}</div>
+              )}
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <TextField
                 required

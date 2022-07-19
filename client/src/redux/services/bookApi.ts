@@ -4,7 +4,7 @@ import type { BookData } from "../../pages/Books";
 // Define a service using a base URL and expected endpoints
 export const bookApi = createApi({
   reducerPath: "bookApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/" }),
+  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/api/v1" }),
   tagTypes: ["Books"], // tagTypes are for automatically fetching data from updated server
   endpoints: (builder) => ({
     getAllBooks: builder.query<BookData[] | any, void>({
@@ -27,8 +27,8 @@ export const bookApi = createApi({
     }),
 
     updateBook: builder.mutation<void, BookData>({
-      query: ({ id, ...rest }) => ({
-        url: `books/${id}`,
+      query: ({ _id, ...rest }) => ({
+        url: `books/${_id}`,
         method: "PUT",
         body: rest,
       }),

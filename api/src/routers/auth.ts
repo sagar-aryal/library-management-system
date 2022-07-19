@@ -2,8 +2,8 @@ import express from 'express'
 import passport from 'passport'
 import jwt from 'jsonwebtoken'
 
-import { JWT_SECRET } from '../util/secrets'
 import { User } from '../models/User'
+import { JWT_SECRET } from '../util/secrets'
 
 const router = express.Router()
 
@@ -18,12 +18,21 @@ router.post(
     const token = jwt.sign({ email: user.email, role: user.role }, JWT_SECRET, {
       expiresIn: '1h',
     })
-    res.cookie('token', token, { httpOnly: true })
+    res.cookie('token', token, {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+    })
     res.json({
       message: 'Successfully logged in',
       token,
     })
   }
 )
+
+router.post('/logout', (req, res) => {
+  res.clearCookie('token', { httpOnly: true, sameSite: 'none', secure: true })
+  res.json({ message: 'Logged out successfully' })
+})
 
 export default router

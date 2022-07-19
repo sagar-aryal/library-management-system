@@ -15,66 +15,62 @@ import {
   TableSortLabel,
   Table,
   TablePagination,
-  IconButton,
   Button,
   Grid,
   Typography,
   Paper,
   Container,
-  Menu,
-  MenuItem,
-  Fade,
-  ButtonGroup,
+  Stack,
+  IconButton,
 } from "@mui/material";
-import { Clear, Check, MoreVert } from "@mui/icons-material";
+import {
+  Clear,
+  Check,
+  Visibility,
+  AddShoppingCart,
+  Edit,
+  Delete,
+} from "@mui/icons-material";
 import { toast, ToastContainer, Slide } from "react-toastify";
 
 interface Header {
-  id: "isbn" | "name" | "authors" | "publisher" | "publishedDate" | "available";
+  id: "isbn" | "title" | "authors" | "category" | "publisher" | "available";
   label: string;
 }
 
 export interface BookData {
-  id?: number;
+  _id?: string;
   isbn?: string;
-  name: string;
+  title: string;
+  description?: string;
+  category: string;
   authors: any;
   publisher: string;
   publishedDate: string;
-  available?: "BORROWED" | "AVAILABLE";
+  status?: "BORROWED" | "AVAILABLE";
 }
 
 type Order = "asc" | "desc";
 
 // Table header label
 const header: Header[] = [
-  { id: "name", label: "Name" },
+  { id: "title", label: "Name" },
   { id: "authors", label: "Authors" },
   { id: "publisher", label: "Publisher" },
-  { id: "publishedDate", label: "Published Date" },
-  { id: "available", label: "Available" },
+  { id: "category", label: "Category" },
+  { id: "available", label: "Status" },
 ];
 
 const Books = () => {
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<keyof BookData>("name");
+  const [orderBy, setOrderBy] = useState<keyof BookData>("title");
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const navigate = useNavigate();
   const { data, error, isLoading, isSuccess } = useGetAllBooksQuery();
   // console.log(data);
   const [deleteBook] = useDeleteBookMutation();
-
-  // Action buttion functionality for admins only
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   // Sorting functionality
   function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -200,8 +196,8 @@ const Books = () => {
                 {stableSort(data, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((book) => (
-                    <TableRow key={book.id}>
-                      <TableCell>{book.name}</TableCell>
+                    <TableRow key={book._id}>
+                      <TableCell>{book.title}</TableCell>
                       <TableCell>
                         {Array.isArray(book.authors) &&
                           book.authors.map((author: string) => (
@@ -211,92 +207,58 @@ const Books = () => {
                           ))}
                       </TableCell>
                       <TableCell>{book.publisher}</TableCell>
-                      <TableCell>{book.publishedDate}</TableCell>
+                      <TableCell>{book.category}</TableCell>
 
                       <TableCell>
-                        {book.available === "AVAILABLE" ? (
+                        {book.status === "AVAILABLE" ? (
                           <Check style={{ color: "green" }} />
                         ) : (
                           <Clear style={{ color: "red" }} />
                         )}
                       </TableCell>
                       <TableCell>
-                        <ButtonGroup
-                          variant="text"
-                          aria-label="text button group"
-                          color="inherit"
-                        >
-                          <Button
+                        <Stack direction="row" alignItems="center">
+                          <IconButton
                             size="small"
+                            color="primary"
                             onClick={() => {
-                              navigate(`/books/${book.id}`, {
+                              navigate(`/books/${book._id}`, {
                                 replace: true,
                               });
                             }}
                           >
-                            View
-                          </Button>
-
-                          <Button
-                            size="small"
-                            disabled={
-                              book.available === "BORROWED" ? true : false
-                            }
-                          >
-                            Borrow
-                          </Button>
-
-                          {/*  <Button
-                            size="small"
-                            onClick={() => {
-                              navigate(`/updatebook/${book.id}`, {
-                                replace: true,
-                              });
-                            }}
-                          >
-                            Update
-                          </Button> */}
+                            <Visibility />
+                          </IconButton>
 
                           <IconButton
-                            aria-label="moveverticon"
-                            color="inherit"
-                            id="fade-button"
-                            aria-controls={open ? "fade-menu" : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={open ? "true" : undefined}
-                            onClick={handleClick}
+                            size="small"
+                            color="primary"
+                            disabled={book.status === "BORROWED" ? true : false}
                           >
-                            <MoreVert />
+                            <AddShoppingCart />
                           </IconButton>
-                          <Menu
-                            id="fade-menu"
-                            MenuListProps={{
-                              "aria-labelledby": "fade-button",
+
+                          <IconButton
+                            size="small"
+                            color="primary"
+                            onClick={() => {
+                              navigate(`/updatebook/${book._id}`, {
+                                replace: true,
+                              });
                             }}
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                            TransitionComponent={Fade}
                           >
-                            <MenuItem
-                              onClick={() => {
-                                navigate(`/updatebook/${book.id}`, {
-                                  replace: true,
-                                });
-                              }}
-                            >
-                              Update
-                            </MenuItem>
-                            <MenuItem
-                              onClick={() => {
-                                handleDelete(book.id);
-                                handleClose();
-                              }}
-                            >
-                              Delete
-                            </MenuItem>
-                          </Menu>
-                        </ButtonGroup>
+                            <Edit />
+                          </IconButton>
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => {
+                              handleDelete(book._id);
+                            }}
+                          >
+                            <Delete />
+                          </IconButton>
+                        </Stack>
                       </TableCell>
                     </TableRow>
                   ))}

@@ -14,12 +14,12 @@ export const createAuthor = async (
   next: NextFunction
 ) => {
   try {
-    const { firstName, lastName, description } = req.body
+    const { firstName, lastName, biography } = req.body
 
     const author = new Author({
       firstName,
       lastName,
-      description,
+      biography,
     })
 
     await AuthorService.createAuthor(author)

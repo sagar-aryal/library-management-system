@@ -9,7 +9,6 @@ export type User = {
   firstName: string
   lastName: string
   email: string
-  password: string
   role: string
   borrowedBooks: string[]
 }
@@ -36,12 +35,6 @@ const userSchema = new mongoose.Schema({
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       'Please use a valid email address',
     ],
-  },
-
-  password: {
-    type: String,
-    required: [true, 'please add password'],
-    minlength: [6, 'password is 6 characters long.'],
   },
 
   role: {

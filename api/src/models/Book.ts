@@ -1,11 +1,11 @@
 import mongoose, { Document, Schema } from 'mongoose'
 
 export enum Caterogy {
-  FICTION = 'FICTION',
-  NONFICTION = 'NONFICTION',
   DRAMA = 'DRAMA',
-  POETRY = 'POETRY',
+  FICTION = 'FICTION',
   FOLKTALE = 'FOLKTALE',
+  NONFICTION = 'NONFICTION',
+  POETRY = 'POETRY',
 }
 
 export enum Status {
@@ -19,7 +19,7 @@ export type Book = {
   description: string
   category: string
   publisher: string
-  publishedYear: number
+  publishedDate: number
   status: string
   authors: string[]
   borrowerId: string
@@ -33,7 +33,7 @@ const bookSchema = new mongoose.Schema({
   isbn: {
     type: String,
     index: true,
-    unique: true,
+    unique: [true, 'please add unique ISBN'],
     required: [true, 'please add ISBN'],
   },
 
@@ -47,7 +47,7 @@ const bookSchema = new mongoose.Schema({
   description: {
     type: String,
     required: [true, 'please add description'],
-    maxlength: [500, 'name cannot be more than 500 characters'],
+    maxlength: [1500, 'descritpion cannot be more than 500 characters'],
   },
 
   category: {
@@ -75,6 +75,7 @@ const bookSchema = new mongoose.Schema({
     {
       type: Schema.Types.ObjectId,
       ref: 'Author',
+      required: [true, 'please add authors'],
     },
   ],
 

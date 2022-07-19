@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 
 import Book from '../models/Book'
 import BookService from '../services/book'
-import { BadRequestError, ForbiddenError } from '../helpers/apiError'
+import { BadRequestError } from '../helpers/apiError'
 
 // @desc    crete a new book
 // @route   POST /api/v1/books
@@ -36,7 +36,6 @@ export const createBook = async (
       authors,
     })
     await BookService.createBook(book)
-
     res.json(book)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
@@ -180,33 +179,54 @@ export const returnBook = async (
 }
 
 // @desc    get filtered book
-// @route   GET /api/v1/books/filter?isbn=..&title=...&etc
+// @route   GET /api/v1/books/filter?isbn=..&title=...&status
 // @access  public
 
-export const filterBook = async (
+/* export const filterBook = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { isbn, title, category, author, status, page, limit } =
+    
+     const { isbn, title, category, authors, status, page, limit } =
       req.query as {
         [key: string]: string
-      }
-    let authors: string[] = []
-    if (author) {
-      authors = author.split(',')
-    }
-    await BookService.filterBook(
-      isbn,
-      title,
-      category,
-      authors,
-      status,
-      page,
-      limit
+      } 
+    res.json(
+      await BookService.filterBook(
+        searchKey
+         isbn,
+        title,
+        category,
+        authors,
+        status,
+        page,
+        limit 
+      )
     )
-    res.status(204).end()
+  
+  } catch (error) {
+    if (error instanceof Error && error.name == 'ValidationError') {
+      next(new BadRequestError('Invalid Request', error))
+    } else {
+      next(error)
+    }
+  }
+} */
+
+// @desc    get searched book
+// @route   GET /api/v1/books/searchBook/keywords
+// @access  public
+
+export const searchBook = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const searchByKeywords = req.params.keywords
+    res.json(await BookService.searchBook(searchByKeywords))
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', error))

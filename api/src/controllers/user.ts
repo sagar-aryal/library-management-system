@@ -14,13 +14,12 @@ export const createUser = async (
   next: NextFunction
 ) => {
   try {
-    const { firstName, lastName, email, password, role } = req.body
+    const { firstName, lastName, email, role } = req.body
 
     const user = new User({
       firstName,
       lastName,
       email,
-      password,
       role,
     })
 

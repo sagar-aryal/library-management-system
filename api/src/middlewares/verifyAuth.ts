@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
-
 import { ForbiddenError } from '../helpers/apiError'
 
 export default function verifyAuth(
@@ -9,17 +8,9 @@ export default function verifyAuth(
   next: NextFunction
 ) {
   try {
+    const auth = req.headers.authorization || ''
+    const token = auth.split(' ')[1]
     const JWT_SECRET = process.env.JWT_SECRET as string
-
-    let headerToken = null
-    const authHeader = req.headers.authorization || ''
-    if (authHeader) {
-      headerToken = authHeader.split(' ')[1]
-    }
-
-    const cookieToken = req.cookies.token
-
-    const token = headerToken || cookieToken
 
     const user = jwt.verify(token, JWT_SECRET)
     req.user = user

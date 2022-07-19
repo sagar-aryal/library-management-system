@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { useGetBookByIdQuery } from "../redux/services/bookApi";
+import { useGetAuthorByIdQuery } from "../redux/services/authorApi";
 
 import {
   Box,
@@ -14,45 +14,37 @@ import {
 } from "@mui/material";
 import { Container } from "@mui/system";
 
-const BookDetails = () => {
+const AuthorDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data } = useGetBookByIdQuery(id!);
+  const { data } = useGetAuthorByIdQuery(id!);
 
   const card = (
     <React.Fragment>
       <CardContent>
-        <Typography variant="h4" gutterBottom>
-          {data && data.title}
+        <Typography variant="h4" component="h4">
+          {data && data.firstName}
         </Typography>
-
-        <Typography color="text.secondary">
-          ISBN - {data && data.isbn}
-        </Typography>
-        <Typography color="text.secondary">
-          Publisher {data && data.category}
-        </Typography>
-        <Typography color="text.secondary">
-          Publisher {data && data.publisher}
-        </Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          Publication Year {data && data.publishedDate}
+        <Typography
+          variant="h5"
+          component="h5"
+          color="text.secondary"
+          sx={{ mb: 1.5 }}
+        >
+          {data && data.lastName}
         </Typography>
         <Typography color="text.secondary" sx={{ mb: 1.5 }}>
-          Publisher {data && data.description}
+          {data && data.biography}
         </Typography>
         <Typography variant="h6" color="text.secondary">
-          Authors
+          Books
         </Typography>
         <Typography color="text.secondary">
           {data &&
-            data.authors.map((author: string, index: number) => (
-              <li key={index}>{author}</li>
+            data.books.map((book: string, index: number) => (
+              <li key={index}>{book}</li>
             ))}
           <br />
-        </Typography>
-        <Typography color="text.secondary" mt={2}>
-          {data && data.status}
         </Typography>
       </CardContent>
     </React.Fragment>
@@ -66,7 +58,7 @@ const BookDetails = () => {
             <Button
               size="small"
               variant="contained"
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/authors")}
             >
               Go Back
             </Button>
@@ -82,4 +74,4 @@ const BookDetails = () => {
   );
 };
 
-export default BookDetails;
+export default AuthorDetails;

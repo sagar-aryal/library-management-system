@@ -139,7 +139,7 @@ const returnBook = async (
   return foundBook
 }
 
-const filterBook = async (
+/* const filterBook = async (
   isbn: string,
   title: string,
   category: string,
@@ -194,6 +194,26 @@ const filterBook = async (
     .sort({ title: 1, publishedDate: -1 })
     .limit(limit)
     .skip(skip)
+} */
+
+const searchBook = async (
+  searchByKeywords: string
+): Promise<BookDocument[] | null> => {
+  const foundBook = await Book.find({
+    $or: [
+      { isbn: { $regex: searchByKeywords } },
+      { title: { $regex: searchByKeywords } },
+      { category: { $regex: searchByKeywords } },
+      { publisher: { $regex: searchByKeywords } },
+      { title: { $regex: searchByKeywords } },
+    ],
+  })
+
+  if (!foundBook) {
+    throw new NotFoundError(`Book with keyword ${searchByKeywords} not found`)
+  }
+
+  return foundBook
 }
 
 export default {
@@ -204,5 +224,5 @@ export default {
   deleteBook,
   borrowBook,
   returnBook,
-  filterBook,
+  searchBook,
 }
