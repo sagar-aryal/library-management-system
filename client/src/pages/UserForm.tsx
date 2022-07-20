@@ -95,14 +95,14 @@ const AddUser = () => {
       email: Yup.string()
         .email("Enter a valid email address")
         .required("Required"),
-      books: Yup.array(),
+      books: Yup.array().optional(),
     }),
 
     onSubmit: async (values: UserData, { resetForm }) => {
       if (id) {
         await updateUser(values);
         setTimeout(() => {
-          navigate("/");
+          navigate("/users");
         }, 1000);
       } else {
         await addUser(values);
@@ -174,9 +174,8 @@ const AddUser = () => {
             <Grid item xs={12}>
               <TextField
                 select
-                required
                 name="borrowedBooks"
-                label="Select Books"
+                label="Select Books(Optional)"
                 fullWidth
                 multiline
                 variant="outlined"

@@ -95,14 +95,14 @@ const AddAuthor = () => {
       biography: Yup.string()
         .max(1500, "Must be 1500 characters or less")
         .required("Required"),
-      books: Yup.array().required("Required"),
+      books: Yup.array().optional(),
     }),
 
     onSubmit: async (values: AuthorData, { resetForm }) => {
       if (id) {
         await updateAuthor(values);
         setTimeout(() => {
-          navigate("/");
+          navigate("/authors");
         }, 1000);
       } else {
         await addAuthor(values);
@@ -176,9 +176,8 @@ const AddAuthor = () => {
             <Grid item xs={12}>
               <TextField
                 select
-                required
                 name="books"
-                label="Select Books"
+                label="Select Books (Optional)"
                 fullWidth
                 multiline
                 variant="outlined"
