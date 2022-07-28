@@ -19,7 +19,8 @@ jobs:
           ls -la
       - name: node version setup
         uses: actions/setup-node@v3
-        with: node-version:"16.x"
+        with:
+          node-version: "16.x"
       - name: install node modules
         run: npm ci
       - name: build
