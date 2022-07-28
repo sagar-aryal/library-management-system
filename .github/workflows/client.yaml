@@ -2,7 +2,7 @@ name: test.client
 on:
   push:
     branches:
-      - main
+      - develop
 jobs:
   build:
     runs-on: ubuntu-latest
