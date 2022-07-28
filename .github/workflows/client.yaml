@@ -13,7 +13,7 @@ jobs:
       - name: check out action
         uses: actions/checkout@v3
       - run: |
-          list of all folders
+          echo list of all folders and files
           ls -la
           cd src
           ls -la
