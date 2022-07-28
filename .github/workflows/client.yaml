@@ -17,3 +17,12 @@ jobs:
           ls -la
           cd src
           ls -la
+      - name: node version setup
+        uses: actions/setup-node@v3
+        with: node-version:"16.x"
+      - name: install node modules
+        run: npm ci
+      - name: build
+        run: npm run build
+      - name: check build folders
+        run: ls -la
