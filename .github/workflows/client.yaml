@@ -13,7 +13,6 @@ jobs:
       - name: check out action
         uses: actions/checkout@v3
       - run: |
-          echo list of all folders and files
           ls -la
           cd src
           ls -la
@@ -27,3 +26,11 @@ jobs:
         run: npm run build
       - name: check build folders
         run: ls -la
+      - name: deploy
+        uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ${{secrets.NETLIFY_AUTH_TOKEN}}
+        with:
+          args: deploy --dir=client/build --prod
+      - name: End
+        run: echo "Project deployed successfully"
