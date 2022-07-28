@@ -1,4 +1,4 @@
-name: test.client
+name: client
 on:
   push:
     branches:
@@ -33,5 +33,5 @@ jobs:
           NETLIFY_SITE_ID: ${{secrets.NETLIFY_SITE_ID}}
         with:
           args: deploy --dir=client/build --prod
-      - name: End
+      - name: end
         run: echo "Project deployed successfully"

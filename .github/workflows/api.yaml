@@ -1,0 +1,45 @@
+name: api
+on:
+  push:
+    branches:
+      - develop
+  pull_requests:
+    branches:
+      - develop
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+      - name: chaching
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{runner.os}}-node-${{hashFiles('**/package-lock.json')}}
+          restore-keys: |
+            ${{runner.os}}-node-
+      - name: node install
+        run: npm ci
+      - name: build
+        run: npm run build
+      - name: view folders
+        run: |
+          echo "List of folders"
+          ls
+      - name: deploy
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+          appdir: "api"
+      - name: end
+        run: echo "Project deployed successfully"
