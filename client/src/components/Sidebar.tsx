@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 import {
   AccountBox,
-  Article,
   Group,
   Home,
   Storefront,
@@ -19,9 +18,6 @@ import {
   ListItemIcon,
   ListItemText,
   Collapse,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
 } from "@mui/material";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
@@ -48,28 +44,6 @@ const Sidebar = () => {
           <ListItemText primary="Books" />
         </ListItem>
 
-        {/*   <ListItem onClick={handleClick} component={Link} to="/">
-          <ListItemIcon>
-            <Article />
-          </ListItemIcon>
-          <ListItemText primary="Books" />
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItem>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <FormGroup sx={{ pl: 4 }}>
-              <FormControlLabel control={<Checkbox />} label="Fiction (20)" />
-              <FormControlLabel
-                control={<Checkbox />}
-                label="Nonfiction (20)"
-              />
-              <FormControlLabel control={<Checkbox />} label="Drama (20)" />
-              <FormControlLabel control={<Checkbox />} label="Poetry (20)" />
-              <FormControlLabel control={<Checkbox />} label="Foktale (20)" />
-            </FormGroup>
-          </List>
-        </Collapse>
- */}
         <ListItem>
           <ListItemIcon>
             <Notifications />
