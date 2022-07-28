@@ -1,0 +1,17 @@
+name: test.client
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - name: check out action
+      - uses: actions/checkout@v3
+      - run: |
+          echo viewing...
+          ls
