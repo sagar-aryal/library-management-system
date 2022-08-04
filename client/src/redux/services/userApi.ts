@@ -4,7 +4,9 @@ import type { UserData } from "../../pages/Users";
 // Define a service using a base URL and expected endpoints
 export const userApi = createApi({
   reducerPath: "userApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/api/v1" }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: "https://fs10-fullstack-api.herokuapp.com/api/v1",
+  }),
   tagTypes: ["Users"], // tagTypes are for automatically fetching data from updated server
   endpoints: (builder) => ({
     getAllUsers: builder.query<UserData[] | any, void>({

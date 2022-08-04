@@ -4,7 +4,9 @@ import type { AuthorData } from "../../pages/Authors";
 // Define a service using a base URL and expected endpoints
 export const authorApi = createApi({
   reducerPath: "authorApi",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/api/v1" }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: "https://fs10-fullstack-api.herokuapp.com/api/v1",
+  }),
   tagTypes: ["Authors"], // tagTypes are for automatically fetching data from updated server
   endpoints: (builder) => ({
     getAllAuthors: builder.query<AuthorData[] | any, void>({
