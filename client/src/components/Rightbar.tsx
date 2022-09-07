@@ -9,6 +9,7 @@ import UserForm from "../pages/UserForm";
 import Authors from "../pages/Authors";
 import AuthorForm from "../pages/AuthorForm";
 import AuthorDetails from "../pages/AuthorDetails";
+import Login from "../pages/Login";
 
 import { Box } from "@mui/material";
 
@@ -29,6 +30,8 @@ const Rightbar = () => {
         <Route path="/authors/:id" element={<AuthorDetails />} />
         <Route path="/addauthor" element={<AuthorForm />} />
         <Route path="/updateauthor/:id" element={<AuthorForm />} />
+
+        <Route path="/login" element={<Login />} />
       </Routes>
     </Box>
   );

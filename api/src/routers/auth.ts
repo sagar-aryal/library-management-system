@@ -14,7 +14,8 @@ router.post(
   passport.authenticate('google-id-token', { session: false }),
   (req, res) => {
     const user = req.user as User
-
+    console.log(user)
+    // Generate access token and pass it to the frontend to validate and verify email
     const token = jwt.sign({ email: user.email, role: user.role }, JWT_SECRET, {
       expiresIn: '1h',
     })

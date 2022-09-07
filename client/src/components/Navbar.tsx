@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   AppBar,
@@ -13,6 +13,7 @@ import {
   Toolbar,
   Typography,
   alpha,
+  Button,
 } from "@mui/material";
 import { Mail, Notifications, LibraryBooks, Search } from "@mui/icons-material";
 import { deepPurple } from "@mui/material/colors";
@@ -81,6 +82,8 @@ const UserBox = styled(Box)(({ theme }) => ({
 }));
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
   return (
     <div style={{ marginBottom: "5rem" }}>
       <AppBar>
@@ -113,6 +116,15 @@ const Navbar = () => {
               inputProps={{ "aria-label": "search" }}
             />
           </SearchBar>
+          <Button
+            variant="text"
+            size="small"
+            sx={{ color: "white", border: "1px solid white" }}
+            onClick={() => navigate("/login")}
+          >
+            Login
+          </Button>
+          {/*
           <Icons>
             <Badge badgeContent={4} color="error">
               <Mail />
@@ -131,7 +143,9 @@ const Navbar = () => {
             <Avatar sx={{ bgcolor: deepPurple[500] }}>JD</Avatar>
             <Typography variant="h6">John</Typography>
           </UserBox>
+           */}
         </StyledToolbar>
+
         <Menu
           id="demo-positioned-menu"
           aria-labelledby="demo-positioned-button"

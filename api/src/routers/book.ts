@@ -9,6 +9,8 @@ import {
   returnBook,
   searchBook,
 } from '../controllers/book'
+import verifyAuth from '../middlewares/verifyAuth'
+import verifyAdmin from '../middlewares/verifyAdmin'
 
 const router = express.Router()
 
@@ -20,11 +22,11 @@ router.get('/', getAllBooks)
 router.get('/search/:keywords', searchBook)
 router.get('/:bookId', getSingleBook)
 
-router.post('/', createBook)
-router.post('/:bookId/borrow', borrowBook)
-router.post('/:bookId/return', returnBook)
+router.post('/', verifyAuth, verifyAdmin, createBook)
+router.post('/:bookId/borrow', verifyAuth, borrowBook)
+router.post('/:bookId/return', verifyAuth, returnBook)
 
-router.put('/:bookId', updateBook)
-router.delete('/:bookId', deleteBook)
+router.put('/:bookId', verifyAuth, verifyAdmin, updateBook)
+router.delete('/:bookId', verifyAuth, verifyAdmin, deleteBook)
 
 export default router

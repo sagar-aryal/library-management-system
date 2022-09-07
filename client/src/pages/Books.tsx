@@ -44,7 +44,7 @@ export interface BookData {
   title: string;
   description?: string;
   category: string;
-  authors: any;
+  authors: string[];
   publisher: string;
   publishedDate: string;
   status?: "BORROWED" | "AVAILABLE";

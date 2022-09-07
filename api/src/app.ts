@@ -27,6 +27,8 @@ app.use(express.json())
 app.use(cors())
 
 app.use(cookieParser())
+
+// For the use of Google Password Strategy
 app.use(passport.initialize())
 passport.use(loginWithGoogle())
 
