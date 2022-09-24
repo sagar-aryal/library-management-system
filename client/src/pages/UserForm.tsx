@@ -121,7 +121,7 @@ const AddUser = () => {
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
               <TextField
-                required
+                disabled
                 autoFocus
                 name="firstName"
                 type="text"
@@ -139,7 +139,7 @@ const AddUser = () => {
 
             <Grid item xs={12} sm={6}>
               <TextField
-                required
+                disabled
                 name="lastName"
                 type="text"
                 label="Last Name"
@@ -156,7 +156,7 @@ const AddUser = () => {
 
             <Grid item xs={12}>
               <TextField
-                required
+                disabled
                 name="email"
                 type="email"
                 label="Email Address"

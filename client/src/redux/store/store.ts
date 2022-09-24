@@ -3,6 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { bookApi } from "../services/bookApi";
 import { userApi } from "../services/userApi";
 import { authorApi } from "../services/authorApi";
+import authSlice from "../features/authSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     [bookApi.reducerPath]: bookApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [authorApi.reducerPath]: authorApi.reducer,
+    auth: authSlice,
   },
 
   // Adding the api middleware enables caching, invalidation, polling,

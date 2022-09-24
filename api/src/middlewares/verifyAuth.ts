@@ -9,9 +9,11 @@ export default function verifyAuth(
 ) {
   try {
     const auth = req.headers.authorization || ''
-    const token = auth.split(' ')[1]
     const JWT_SECRET = process.env.JWT_SECRET as string
-
+    const token = auth.split(' ')[1]
+    if (!token) {
+      throw new Error('Authentication token nor found')
+    }
     const user = jwt.verify(token, JWT_SECRET)
     req.user = user
     next()

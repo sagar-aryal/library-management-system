@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 
 import User from '../models/User'
 import UserService from '../services/user'
-import { BadRequestError } from '../helpers/apiError'
+import { BadRequestError, UnauthorizedError } from '../helpers/apiError'
 
 // @desc    crete a new user
 // @route   POST /api/v1/users

@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 
 import { User } from '../models/User'
 import { JWT_SECRET } from '../util/secrets'
+import verifyAuth from '../middlewares/verifyAuth'
 
 const router = express.Router()
 

@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { AuthorData } from "../../pages/Authors";
+import { RootState } from "../store/store";
 
 // Define a service using a base URL and expected endpoints
 export const authorApi = createApi({
